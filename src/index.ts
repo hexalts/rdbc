@@ -292,7 +292,12 @@ export class RealtimeDatabase {
    * @requires query - ***Requires a query string.***
    */
   Query(query: string | null): RealtimeDatabase {
-    this.query = query;
+    if (this.query) {
+      this.query += '|#|' + query;
+    } else {
+      this.query = query;
+    }
+
     return this;
   }
 
