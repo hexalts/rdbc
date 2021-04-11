@@ -180,4 +180,4 @@ Note that it is only possible to delete a document if you remember it's id, just
 
 ## Full API Documentation
 
-For deeper understanding of Hexatls Realtime Database APIs, please refer to [this dcumentation](https://github.com/hexalts/rdbc/tree/master/docs/index.html).
+For deeper understanding of Hexatls Realtime Database APIs, please refer to [this dcumentation](https://hexalts.github.io/rdbc/).
