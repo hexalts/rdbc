@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "yarn lint && tsdx build --format esm --minify true --writeMeta false && rm dist/*.map",
+    "build": "yarn lint && yarn doc && tsdx build --format esm --minify true --writeMeta false && rm dist/*.map",
     "doc": "yarn typedoc src/index.ts",
     "test": "tsdx test",
     "lint": "tsdx lint --fix",

@@ -64,8 +64,13 @@
 				<p>Hexalts Realtime Database is an alternative to Firestore by Google&#39;s Firebase.</p>
 				<p><img src="https://github.com/hexalts/rdbc/actions/workflows/main.yml/badge.svg" alt="CI Workflow"></p>
 				<blockquote>
-					<p>I will actively maintain this package since it is currently a beta build. I also will finish the server side really soon.</p>
+					<p>Backend database handler will soon be published! I am preparing the installation documentation right now. Stay tuned!</p>
 				</blockquote>
+				<a href="#instalation" id="instalation" style="color: inherit; text-decoration: none;">
+					<h2>Instalation</h2>
+				</a>
+				<pre><code class="language-shell"><span style="color: #000000">yarn add @hexalts/rdbc</span>
+</code></pre>
 				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
 					<h2>Example</h2>
 				</a>
@@ -73,13 +78,26 @@
 				<a href="#once" id="once" style="color: inherit; text-decoration: none;">
 					<h3>Once</h3>
 				</a>
-				<p>Let&#39;s say you already have a MongoDB with collection <code>cats</code> with multiple documents of <code>cat</code>. You want to get it all for once, it is as easy as</p>
-				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">RealtimeDatabase</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
+				<p>Let&#39;s say you already have a MongoDB with collection <code>cats</code> with multiple documents of <code>cat</code>. You want to get it all for once.</p>
+				<p>First, you need to set up the RDB Configuration.</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">RDB</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">getAllCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RealtimeDatabase</span><span style="color: #000000">({ ...</span><span style="color: #001080">authentication</span><span style="color: #000000"> });</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">).</span><span style="color: #795E26">Once</span><span style="color: #000000">();</span>
-<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">database</span><span style="color: #000000"> = </span><span style="color: #A31515">&#039;jembatanku&#039;</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">RDB</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RDB</span><span style="color: #000000">(</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">host:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;mqtt://broker.hivemq.com:1883&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  </span><span style="color: #001080">database</span>
+<span style="color: #000000">);</span>
+
+</code></pre>
+				<p>Next step is to create a Collection instance. It goes like this.</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">instance</span><span style="color: #000000"> = </span><span style="color: #0070C1">RDB</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
+</code></pre>
+				<p>Note that you only need to do this setup for once. It is dead simple. Then you can get all those <code>cat</code> like this.</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">getAllCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Get</span><span style="color: #000000">();</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">.</span><span style="color: #001080">payload</span><span style="color: #000000">);</span>
 <span style="color: #000000">};</span>
 
 <span style="color: #795E26">getAllCats</span><span style="color: #000000">();</span>
@@ -88,14 +106,11 @@
 					<h3>Stream</h3>
 				</a>
 				<p>What if you want to listen to changes that affected any documents inside <code>cats</code> collection, while you get all documents inside <code>cats</code> collection at once? No worries, because it is as easy as</p>
-				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">RealtimeDatabase</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
-
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">watchThoseCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RealtimeDatabase</span><span style="color: #000000">({ ...</span><span style="color: #001080">authentication</span><span style="color: #000000"> });</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">listener</span><span style="color: #000000"> = </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">).</span><span style="color: #795E26">Stream</span><span style="color: #000000">();</span>
-<span style="color: #000000">  </span><span style="color: #001080">listener</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;snapshot&#039;</span><span style="color: #000000">, </span><span style="color: #001080">snapshot</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">snapshot</span><span style="color: #000000">);</span>
-<span style="color: #000000">  });</span>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">watchThoseCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">stream</span><span style="color: #000000"> = </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Stream</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;all&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">  </span><span style="color: #001080">stream</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;data&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #001080">payload</span><span style="color: #000000">);</span>
+<span style="color: #000000">  })</span>
 <span style="color: #000000">};</span>
 
 <span style="color: #795E26">watchThoseCats</span><span style="color: #000000">();</span>
@@ -132,43 +147,43 @@
 <span style="color: #000000">]</span>
 
 </code></pre>
-				<p>Let&#39;s say you want to get any <code>persian medium</code> cats with age greater than 1. All you need to do is</p>
-				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">RealtimeDatabase</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
-
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">whereAreThoseCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RealtimeDatabase</span><span style="color: #000000">({ ...</span><span style="color: #001080">authentication</span><span style="color: #000000"> });</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;race|==|persian medium&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;age|&gt;|1&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">listener</span><span style="color: #000000"> = </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Stream</span><span style="color: #000000">();</span>
-<span style="color: #000000">  </span><span style="color: #001080">listener</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;snapshot&#039;</span><span style="color: #000000">, </span><span style="color: #001080">snapshot</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">snapshot</span><span style="color: #000000">);</span>
+				<p>Let&#39;s say you want to get any <code>persian medium</code> cats with age greater than 1. It goes like this.</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">whereAreThoseCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">stream</span><span style="color: #000000"> = </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Stream</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;all&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;race&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;==&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;persian medium&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;age&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;&gt;&#039;</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #001080">stream</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;data&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #001080">payload</span><span style="color: #000000">);</span>
 <span style="color: #000000">  });</span>
 <span style="color: #000000">};</span>
 
 <span style="color: #795E26">whereAreThoseCats</span><span style="color: #000000">();</span>
 </code></pre>
-				<p>And it will return</p>
-				<pre><code><span style="color: #000000">[</span>
-<span style="color: #000000">  {</span>
-<span style="color: #000000">    </span><span style="color: #001080">_id:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;ciyo</span><span style="color: #CD3131">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">age</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">race:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;persian medium&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">  },</span>
-<span style="color: #000000">  {</span>
-<span style="color: #000000">    </span><span style="color: #001080">_id:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;3&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;mio</span><span style="color: #CD3131">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">age</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">race:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;persian medium&#039;</span>
-<span style="color: #000000">  },</span>
-<span style="color: #000000">]</span>
+				<p>It will return</p>
+				<pre><code><span style="color: #000000">{</span>
+<span style="color: #000000">  _id: </span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  name: </span><span style="color: #A31515">&#039;ciyo</span><span style="color: #CD3131">,</span>
+<span style="color: #000000">  age: </span><span style="color: #098658">2</span><span style="color: #000000">,</span>
+<span style="color: #000000">  race: </span><span style="color: #A31515">&#039;persian medium&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">}</span>
+<span style="color: #000000">{</span>
+<span style="color: #000000">  _id: </span><span style="color: #A31515">&#039;3&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  name: </span><span style="color: #A31515">&#039;mio</span><span style="color: #CD3131">,</span>
+<span style="color: #000000">  age: </span><span style="color: #098658">3</span><span style="color: #000000">,</span>
+<span style="color: #000000">  race: </span><span style="color: #A31515">&#039;persian medium&#039;</span>
+<span style="color: #000000">},</span>
 </code></pre>
-				<p>First, it will fetch you all documents which meets your rules. And then, once a document (which meets the rules) got changed, an event will be emitted over the <code>listener.on</code> with event name <code>snapshot</code>, the data it emits is the one which got changed, it will not return the whole documents (which meets the rules) because that is so inefficient.</p>
-				<p>By default, if you input the <code>Query</code> without any specs, such as</p>
-				<pre><code class="language-javascript"><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">)</span>
+				<p>First, it will fetch you all documents which meets your rules. And then, once a document (which meets the rules) got changed, an event will be emitted over the <code>stream.on</code> with event name <code>data</code>, the data it emits is the one which got changed, it will not return the whole documents (which meets the rules) again because that will be inefficient.</p>
+				<a href="#clear" id="clear" style="color: inherit; text-decoration: none;">
+					<h3>Clear</h3>
+				</a>
+				<p>A note to remember:</p>
+				<blockquote>
+					<p>The Where() method actually push any query into the instance state, it means you need to Clear the Where condition to default every time you need a different query pattern.</p>
+				</blockquote>
+				<p>But don&#39;t worry, because it is as easy as this.</p>
+				<pre><code class="language-javascript"><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Clear</span><span style="color: #000000">();</span>
 </code></pre>
-				<p>It means you are pointing to a <code>document</code> with <code>_id</code> of <code>&#39;1&#39;</code>.</p>
 				<a href="#update" id="update" style="color: inherit; text-decoration: none;">
 					<h3>Update</h3>
 				</a>
@@ -176,13 +191,9 @@
 				<ol>
 					<li>If you know the document id.</li>
 				</ol>
-				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">RealtimeDatabase</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
-
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">changeCatName</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RealtimeDatabase</span><span style="color: #000000">({ ...</span><span style="color: #001080">authentication</span><span style="color: #000000"> });</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Update</span><span style="color: #000000">({ </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;cio&#039;</span><span style="color: #000000"> });</span>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">changeCatName</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;_id&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;==&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Update</span><span style="color: #000000">({ </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;cio&#039;</span><span style="color: #000000"> });</span>
 <span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">);</span>
 <span style="color: #000000">};</span>
 
@@ -191,13 +202,9 @@
 				<ol start="2">
 					<li>If you don&#39;t remember the document id.</li>
 				</ol>
-				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">RealtimeDatabase</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
-
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">changeCatName</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RealtimeDatabase</span><span style="color: #000000">({ ...</span><span style="color: #001080">authentication</span><span style="color: #000000"> });</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;name|==|cio&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Update</span><span style="color: #000000">({ </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;cio&#039;</span><span style="color: #000000"> });</span>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">changeCatName</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;name&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;==&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;ciyo&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Update</span><span style="color: #000000">({ </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;cio&#039;</span><span style="color: #000000"> });</span>
 <span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">);</span>
 <span style="color: #000000">};</span>
 
@@ -206,24 +213,33 @@
 				<a href="#delete" id="delete" style="color: inherit; text-decoration: none;">
 					<h3>Delete</h3>
 				</a>
-				<p>Let&#39;s say <code>cio</code> has just passed away and you want to move on, completely. All you need to do is</p>
-				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">RealtimeDatabase</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
-
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">byeByeCat</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RealtimeDatabase</span><span style="color: #000000">({ ...</span><span style="color: #001080">authentication</span><span style="color: #000000"> });</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">Delete</span><span style="color: #000000">();</span>
+				<p>Let&#39;s say <code>cio</code> has just passed away and you want to move on, completely. Just like the Update method, you can use Where condition to delete it</p>
+				<ol>
+					<li>If you know the document id.</li>
+				</ol>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">changeCatName</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;_id&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;==&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;1&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Delete</span><span style="color: #000000">();</span>
 <span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">);</span>
 <span style="color: #000000">};</span>
 
-<span style="color: #795E26">byeByeCat</span><span style="color: #000000">();</span>
+<span style="color: #795E26">changeCatName</span><span style="color: #000000">();</span>
 </code></pre>
-				<p>Note that it is only possible to delete a document if you remember it&#39;s id, just like you remember it&#39;s soul.</p>
+				<ol start="2">
+					<li>If you don&#39;t remember the document id.</li>
+				</ol>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">changeCatName</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;name&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;==&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;ciyo&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Delete</span><span style="color: #000000">();</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">);</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #795E26">changeCatName</span><span style="color: #000000">();</span>
+</code></pre>
 				<a href="#full-api-documentation" id="full-api-documentation" style="color: inherit; text-decoration: none;">
 					<h2>Full API Documentation</h2>
 				</a>
-				<p>For deeper understanding of Hexatls Realtime Database APIs, please refer to <a href="https://hexalts.github.io/rdbc/classes/realtimedatabase.html">this dcumentation</a>.</p>
+				<p>For deeper understanding of Hexatls Realtime Database APIs, please refer to <a href="https://hexalts.github.io/rdbc/classes/default.html">this dcumentation</a>.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
