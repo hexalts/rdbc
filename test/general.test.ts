@@ -1,25 +1,28 @@
-import { RealtimeDatabase } from '../src';
+import RDBC from '../src';
 
-const timestamp = Date.now();
-const db = new RealtimeDatabase(
+const database = 'jembatanku';
+const collection = 'bridge';
+const RDB = new RDBC(
   {
-    host: 'mqtt://test.mosquitto.org:1883',
-    password: '',
-    username: '',
+    host: 'mqtt://broker.hivemq.com:1883',
   },
-  timestamp
+  database
 );
+const instance = RDB.Collection(collection);
 
-describe('Instance test scenario', () => {
-  it('Get custom instance ID', () => {
-    expect(db.InstanceId).toEqual(timestamp);
+describe('Realtime Database instance test scenario', () => {
+  it('Database target sets correctly', () => {
+    expect(instance.Status().database).toEqual(database);
   });
-  const client = db.createMQTTInstance();
-  it('Connect to a broker host', async () => {
+  it('Collection target sets correctly', () => {
+    expect(instance.Status().collection).toEqual(collection);
+  });
+  const client = RDB.CreateMQTTInstance();
+  it('Connect to MQTT host', async () => {
     const result = new Promise<boolean>((resolve, reject) => {
       const timeout = setTimeout(() => {
         resolve(false);
-      }, 10000);
+      }, 5000);
       client
         .once('connect', () => {
           clearTimeout(timeout);
@@ -33,5 +36,32 @@ describe('Instance test scenario', () => {
         });
     });
     expect(await result).toEqual(true);
+  });
+});
+
+describe('Collection functions test scenario', () => {
+  afterEach(() => {
+    instance.Clear();
+  });
+  it('Get', async () => {
+    const response = await instance.Get();
+    expect(response.type !== 'error').toEqual(true);
+  });
+  it('Create', async () => {
+    const response = await instance.Create({
+      type: 'tester',
+      test: 'from jest',
+    });
+    expect(response.type !== 'error').toEqual(true);
+  });
+  it('Update', async () => {
+    instance.Where('type', '==', 'tester');
+    const response = await instance.Update({ test: 'should be true' });
+    expect(response.type !== 'error').toEqual(true);
+  });
+  it('Delete', async () => {
+    instance.Where('type', '==', 'tester');
+    const response = await instance.Delete();
+    expect(response.type !== 'error').toEqual(true);
   });
 });

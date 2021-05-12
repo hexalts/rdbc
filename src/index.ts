@@ -1,393 +1,438 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import mqtt from 'mqtt';
+import * as MQTT from 'mqtt';
+import { EventEmitter } from 'events';
 
 /**
- * @ignore
+ * MQTT Broker Host Configuration
  */
-const createMQTTInstance = (
-  host: string,
-  username: string,
-  password: string
+export interface BrokerConfiguration {
+  /**
+   * MQTT Host
+   *
+   * Make sure you have access rights to the host
+   *
+   * @example
+   * host = 'ws://test.mosquitto.org:1883'
+   */
+  host: string;
+  /**
+   * MQTT Username
+   */
+  username?: undefined | string;
+  /**
+   * MQTT Password
+   */
+  password?: undefined | string;
+}
+
+/**
+ * Query template.
+ */
+export interface Query {
+  /**
+   * Document field name.
+   */
+  field: string;
+  /**
+   * Query selector.
+   */
+  operator: '==' | '<=' | '>=' | '<' | '>' | '!=';
+  /**
+   * Value to compare.
+   */
+  value: any;
+}
+
+/**
+ * Document structure.
+ */
+export interface Document {
+  [index: string]: any;
+}
+
+/**
+ * RDB current target state.
+ */
+export interface Targets {
+  /**
+   * database name.
+   */
+  database: string;
+  /**
+   * Collection name.
+   */
+  collection: string;
+}
+
+/**
+ * Database response.
+ */
+export interface Payload {
+  /**
+   * Payload type.
+   */
+  type: 'start' | 'reply' | 'end' | 'changeStream' | 'error';
+  /**
+   * Operation type.
+   */
+  operation: 'create' | 'get' | 'update' | 'replace' | 'delete';
+  /**
+   * Query list.
+   */
+  query: Query[];
+  /**
+   * Payload actual data.
+   */
+  payload: Document[] | Document | string;
+}
+
+declare interface Stream {
+  on(event: 'data', listener: (payload: object) => void): this;
+  on(event: 'delete', listener: (payload: string) => void): this;
+  once(event: 'off', listener: () => void): this;
+  once(event: 'data', listener: (payload: object) => void): this;
+  once(event: 'delete', listener: (payload: string) => void): this;
+}
+
+class Stream extends EventEmitter {
+  end() {
+    this.emit('off', true);
+  }
+}
+
+/**
+ * Create an MQTT Connection instance.
+ * @param config
+ */
+export const createMQTTInstance = (
+  config: BrokerConfiguration = {
+    host: '',
+    password: undefined,
+    username: undefined,
+  }
+): MQTT.MqttClient => {
+  return MQTT.connect(config.host, {
+    username: config.username,
+    password: config.password,
+  });
+};
+
+const payloadProcessor = async (
+  broker: BrokerConfiguration,
+  queries: Query[],
+  action: 'create' | 'get' | 'update' | 'delete',
+  database: string,
+  collection: string,
+  payload: object
 ) => {
-  return mqtt
-    .connect(host, {
-      username: username,
-      password: password,
-    })
-    .on('error', error => {
-      console.error(error.message);
-    });
+  return new Promise<Payload>((resolve, reject) => {
+    let shouldPass = false;
+    switch (action) {
+      case 'create':
+        if (queries.length !== 0) {
+          console.warn(
+            'Where condition were set and will always be ignored in Create function'
+          );
+        }
+        shouldPass = true;
+        break;
+      case 'get':
+        shouldPass = true;
+        break;
+      case 'update':
+        if (queries.length === 0) {
+          console.warn(
+            'Where condition must be set in order to use Update function'
+          );
+        } else {
+          shouldPass = true;
+        }
+        break;
+      case 'delete':
+        if (queries.length === 0) {
+          console.warn(
+            'Where condition must be set in order to use Delete function'
+          );
+        } else {
+          shouldPass = true;
+        }
+        break;
+      default:
+        break;
+    }
+    if (shouldPass) {
+      const id = Date.now();
+      const topics = {
+        publish: `request/${database}/${collection}/${id}`,
+        subscribe: `payload/${database}/${collection}/${id}`,
+      };
+      const requestPayload: Payload = {
+        type: 'start',
+        operation: action,
+        query: queries,
+        payload: payload,
+      };
+      const clientConnection = createMQTTInstance(broker);
+      clientConnection.once('connect', () => {
+        clientConnection.subscribe(topics.subscribe);
+        clientConnection.on('message', (_topic, payload) => {
+          const response: Payload = JSON.parse(payload.toString());
+          if (response.type === 'end') {
+            clientConnection.end();
+          } else if (response.type === 'error') {
+            reject(response);
+          } else {
+            resolve(response);
+          }
+        });
+        clientConnection.publish(
+          topics.publish,
+          JSON.stringify(requestPayload)
+        );
+      });
+    } else {
+      reject('Cannot proceed. Please recheck your query.');
+    }
+  });
 };
 
 /**
- * @ignore
+ * Realtime Database by Hexalts.
  */
-const Stream = (
-  host: string,
-  username: string,
-  password: string,
-  collection: string,
-  query: string | string[] | null
-) => {
-  const timestamp = Date.now();
-  const MQTTInstance = createMQTTInstance(host, username, password);
-  MQTTInstance.once('connect', () => {
-    MQTTInstance.on('message', (topic, message) => {
-      const result = JSON.parse(message.toString());
-      if (topic === 'payload/' + timestamp) {
-        if (query) {
-          if (query.includes('||') || query.includes('|')) {
-            MQTTInstance.emit(
-              'snapshot',
-              Object.values(result.payload).map(value => value)
-            );
-            MQTTInstance.subscribe(
-              'changestream/' + collection + '/#',
-              error => {
-                if (error) {
-                  console.error(error.message);
-                }
-              }
-            );
-          } else {
-            MQTTInstance.emit('snapshot', [result.payload]);
-            MQTTInstance.subscribe(
-              'changestream/' + collection + '/' + query,
-              error => {
-                if (error) {
-                  console.error(error.message);
-                }
-              }
-            );
-          }
-        } else {
-          MQTTInstance.emit(
-            'snapshot',
-            Object.values(result.payload).map(value => value)
-          );
-          MQTTInstance.subscribe('changestream/' + collection + '/#', error => {
-            if (error) {
-              console.error(error.message);
-            }
-          });
-        }
-        MQTTInstance.unsubscribe('payload/' + timestamp);
-      } else {
-        if (result.operation === 'delete') {
-          MQTTInstance.emit('snapshot', [
-            { toBeDeleted: true, _id: result.message },
-          ]);
-        } else {
-          MQTTInstance.emit('snapshot', [result.payload]);
-        }
-      }
-    });
-    MQTTInstance.subscribe('payload/' + timestamp, error => {
-      if (!error) {
-        if (query) {
-          MQTTInstance.publish(
-            'request/get/' + timestamp,
-            collection + '|#|' + query
-          );
-        } else {
-          MQTTInstance.publish('request/get/' + timestamp, collection + '|#|');
-        }
-      } else {
-        console.error(error.message);
-      }
-    });
-  });
-  return MQTTInstance;
-};
-
-/**
- * @ignore
- */
-const Once = async (
-  host: string,
-  username: string,
-  password: string,
-  collection: string | null,
-  query: string | string[] | null
-) =>
-  new Promise<Record<string, any>[]>((resolve, reject) => {
-    const timestamp = Date.now();
-    const MQTTInstance = createMQTTInstance(host, username, password);
-    MQTTInstance.once('connect', () => {
-      MQTTInstance.once('message', (_topic, message) => {
-        if (query && (query.includes('||') || query.includes('|'))) {
-          resolve(
-            Object.values(JSON.parse(message.toString()).payload).map(
-              (document: any) => document
-            )
-          );
-        } else {
-          resolve([JSON.parse(message.toString()).payload]);
-        }
-        MQTTInstance.end();
-      });
-      MQTTInstance.subscribe('payload/' + timestamp, (error: Error | null) => {
-        if (!error) {
-          if (query) {
-            MQTTInstance.publish(
-              'request/get/' + timestamp,
-              collection + '|#|' + query
-            );
-          } else {
-            MQTTInstance.publish(
-              'request/get/' + timestamp,
-              collection + '|#|'
-            );
-          }
-        } else {
-          console.error(error.message);
-          reject([error.message]);
-          MQTTInstance.end();
-        }
-      });
-    });
-  });
-
-/**
- * @ignore
- */
-const Delete = async (
-  host: string,
-  username: string,
-  password: string,
-  collection: string,
-  query: string
-) =>
-  new Promise<Record<string, any>[]>((resolve, reject) => {
-    const timestamp = Date.now();
-    const MQTTInstance = createMQTTInstance(host, username, password);
-    MQTTInstance.once('connect', () => {
-      MQTTInstance.once('message', (_topic: string, message: Buffer) => {
-        resolve(JSON.parse(message.toString()));
-        MQTTInstance.end();
-      });
-      MQTTInstance.subscribe('payload/' + timestamp, (error: Error | null) => {
-        if (!error) {
-          MQTTInstance.publish(
-            'request/delete/' + timestamp,
-            collection + '|#|' + query
-          );
-        } else {
-          reject([error.message]);
-          MQTTInstance.end();
-        }
-      });
-    });
-  });
-
-/**
- * @ignore
- */
-const Update = async (
-  host: string,
-  username: string,
-  password: string,
-  collection: string,
-  query: string,
-  payload: Record<string, string>
-) =>
-  new Promise<Record<string, any>[]>((resolve, reject) => {
-    const timestamp = Date.now();
-    const MQTTInstance = createMQTTInstance(host, username, password);
-    MQTTInstance.once('message', (_topic: string, message: Buffer) => {
-      resolve(JSON.parse(message.toString()));
-      MQTTInstance.end();
-    });
-    MQTTInstance.subscribe('payload/' + timestamp, (error: Error | null) => {
-      if (!error) {
-        if (typeof payload !== 'undefined') {
-          MQTTInstance.publish(
-            'request/update/' + timestamp,
-            collection + '|#|' + query + '|#|' + JSON.stringify(payload)
-          );
-        } else {
-          console.error(
-            'Payload type is not an object. Please review your code.'
-          );
-          reject(['Payload type is not an object. Please review your code.']);
-          MQTTInstance.end();
-        }
-      } else {
-        reject([error.message]);
-        MQTTInstance.end();
-      }
-    });
-  });
-
-/**
- * Hexalts Realtime Database Framework.
- */
-export class RealtimeDatabase {
+export default class RDB {
+  private broker: BrokerConfiguration;
+  private database: string;
   /**
-   * Current collection name.
-   */
-  private collection: string | null;
-  /**
-   * Current query.
-   */
-  private query: string | null;
-  /**
-   * MQTT Broker address.
-   */
-  private host: string;
-  /**
-   * MQTT Username for authentication.
-   */
-  private username: string;
-  /**
-   * MQTT Password for authentication.
-   */
-  private password: string;
-  /**
-   * Current instance ID.
-   */
-  private instanceId: number;
-  /**
-   * Constructor of Hexalts Realtime Database Framework.
+   * Realtime Database Class Constructor.
    *
-   * Optionally set an instance ID. Defaults to current timestamp.
+   * @param broker
+   * @param database
+   */
+  constructor(broker: BrokerConfiguration, database: string) {
+    this.broker = broker;
+    this.database = database;
+  }
+  /**
+   * Create an MQTT Instance for custom actions.
+   */
+  CreateMQTTInstance(): MQTT.MqttClient {
+    return createMQTTInstance(this.broker);
+  }
+  /**
+   * Set a collection name.
    *
-   * @param {number} instanceId instance ID.
+   * @param collection
+   */
+  Collection(collection: string): Collection {
+    return new Collection(this.broker, this.database, collection);
+  }
+}
+
+/**
+ * Collection Class.
+ */
+export class Collection {
+  private broker: BrokerConfiguration;
+  private database: string;
+  private collection: string;
+  private queries: Query[] = [];
+  private idSets: boolean = false;
+  /**
+   * Collection Class Constructor.
+   * @param broker
+   * @param database
+   * @param collection
    */
   constructor(
-    mqtt: { host: string; username: string; password: string },
-    instanceId: number = Date.now()
+    broker: BrokerConfiguration,
+    database: string,
+    collection: string
   ) {
-    this.collection = null;
-    this.query = null;
-    this.instanceId = instanceId;
-    this.host = mqtt.host;
-    this.username = mqtt.username;
-    this.password = mqtt.password;
-  }
-
-  /**
-   * Current instance ID.
-   * @return {number} instance ID.
-   */
-  public get InstanceId(): number {
-    return this.instanceId;
-  }
-
-  /**
-   * Set or get a Collection name.
-   *
-   * @param {string} collection collection name.
-   * @requires collection - ***Requires a collection name.***
-   */
-  Collection(collection: string | null): RealtimeDatabase {
+    this.broker = broker;
+    this.database = database;
     this.collection = collection;
+  }
+  /**
+   * Clear the Where query.
+   */
+  Clear() {
+    this.queries = [];
+  }
+  /**
+   * Get current Target state such as `collection` and `database`
+   */
+  Status(): Targets {
+    return {
+      collection: this.collection,
+      database: this.database,
+    };
+  }
+  /**
+   * Set a Where query.
+   *
+   * @example
+   * Collection.Where('fieldName', '==', 5)
+   *
+   * @param field
+   * @param operator
+   * @param value
+   */
+  Where(
+    field: string,
+    operator: '==' | '<=' | '>=' | '<' | '>' | '!=',
+    value: string | number
+  ) {
+    if (!this.idSets) {
+      if (field === '_id') {
+        this.idSets = true;
+        this.queries = [{ field, operator, value }];
+      } else {
+        this.queries.push({ field, operator, value });
+      }
+    } else {
+      console.warn(`an _id has been set. Any other queries will be ignored.`);
+    }
     return this;
   }
-
   /**
-   * Set or get a query for further action.
+   * Stream for document changes from a Collection.
    *
-   * @param {string} query query
-   * @requires query - ***Requires a query string.***
+   * @param method
    */
-  Query(query: string | null): RealtimeDatabase {
-    if (this.query) {
-      this.query += '|#|' + query;
-    } else {
-      this.query = query;
+  Stream(method: 'change' | 'all' = 'change') {
+    const stream = new Stream();
+    const clientConnection = createMQTTInstance(this.broker);
+    if (method === 'all') {
+      this.Get().then(result =>
+        Array.isArray(result)
+          ? result.forEach(document => stream.emit('data', document))
+          : ''
+      );
     }
-
-    return this;
+    clientConnection.once('connect', () => {
+      clientConnection.subscribe(
+        `stream/${this.database}/${this.collection}/#`
+      );
+      clientConnection.on('message', (_topic, payload) => {
+        const content: Payload = JSON.parse(payload.toString());
+        if (content.operation === 'delete') {
+          stream.emit('delete', content);
+        } else {
+          if (this.queries.length !== 0) {
+            let shouldPass = true;
+            this.queries.forEach(query => {
+              if (
+                !Array.isArray(content.payload) &&
+                typeof content.payload === 'object' &&
+                typeof content.payload[query.field] !== 'undefined' &&
+                shouldPass
+              ) {
+                switch (query.operator) {
+                  case '!=':
+                    if (!(content.payload[query.field] !== query.value)) {
+                      shouldPass = false;
+                    }
+                    break;
+                  case '<':
+                    if (!(content.payload[query.field] < query.value)) {
+                      shouldPass = false;
+                    }
+                    break;
+                  case '<=':
+                    if (!(content.payload[query.field] <= query.value)) {
+                      shouldPass = false;
+                    }
+                    break;
+                  case '==':
+                    if (!(content.payload[query.field] === query.value)) {
+                      shouldPass = false;
+                    }
+                    break;
+                  case '>':
+                    if (!(content.payload[query.field] > query.value)) {
+                      shouldPass = false;
+                    }
+                    break;
+                  case '>=':
+                    if (!(content.payload[query.field] >= query.value)) {
+                      shouldPass = false;
+                    }
+                    break;
+                  default:
+                    shouldPass = false;
+                    break;
+                }
+              } else {
+                shouldPass = false;
+              }
+            });
+            if (shouldPass) {
+              stream.emit('data', content);
+            }
+          } else {
+            stream.emit('data', content);
+          }
+        }
+      });
+    });
+    stream.once('off', () => {
+      clientConnection.end(true);
+    });
+    return stream;
   }
-
   /**
-   * Listen for changes on a Collection and specific documents or where queries
+   * Add a document to a collection.
    *
-   * @requires collection - ***Requires initialized collection name.***
-   * @returns {mqtt.MqttClient} MQTT Client
+   * @param payload
    */
-  Stream(): mqtt.MqttClient {
-    if (this.collection !== null) {
-      return Stream(
-        this.host,
-        this.username,
-        this.password,
-        this.collection,
-        this.query
-      );
-    } else {
-      throw new Error('Collection is not defined.');
-    }
+  async Create(payload: Document) {
+    return payloadProcessor(
+      this.broker,
+      this.queries,
+      'create',
+      this.database,
+      this.collection,
+      payload
+    );
   }
-
   /**
-   * Read a Collection for Once
-   * @requires collection - ***Requires initialized collection name.***
-   * @returns {Promise<Record<string, any>[]>} Array of documents.
+   * Get documents from a Collection.
    */
-  Once(): Promise<Record<string, any>[]> {
-    if (this.collection !== null) {
-      return Once(
-        this.host,
-        this.username,
-        this.password,
-        this.collection,
-        this.query
-      );
-    } else {
-      throw new Error('Collection is not defined.');
-    }
+  async Get() {
+    return payloadProcessor(
+      this.broker,
+      this.queries,
+      'get',
+      this.database,
+      this.collection,
+      {}
+    );
   }
-
   /**
-   * Delete documents from a Collection.
-   * @requires collection - ***Requires initialized collection name.***
-   * @requires query - ***Requires initialized query.***
-   * @returns {Promise<Record<string, any>[]>} Server response.
+   * Update one or multiple documents from a Collection.
+   *
+   * @param payload
    */
-  Delete(): Promise<Record<string, any>[]> {
-    if (this.collection !== null && this.query !== null) {
-      return Delete(
-        this.host,
-        this.username,
-        this.password,
-        this.collection,
-        this.query
-      );
-    } else {
-      throw new Error('Collection or query is not defined.');
-    }
+  async Update(payload: object) {
+    return payloadProcessor(
+      this.broker,
+      this.queries,
+      'update',
+      this.database,
+      this.collection,
+      payload
+    );
   }
-
   /**
-   * Update documents based on where queries
-   * @param {Record<string, any>} Object Object payload
-   * @requires collection - ***Requires initialized collection name.***
-   * @requires query - ***Requires initialized query.***
-   * @requires payload - ***Requires a payload object.*** can be any object.
-   * @returns {Promise<Record<string, any>[]>} Server response.
+   * Delete one or multiple documents from a Collection.
    */
-  Update(payload: Record<string, any>): Promise<Record<string, any>[]> {
-    if (this.collection !== null && this.query !== null) {
-      return Update(
-        this.host,
-        this.username,
-        this.password,
-        this.collection,
-        this.query,
-        payload
-      );
-    } else {
-      throw new Error('Collection or query is not defined.');
-    }
-  }
-
-  /**
-   * Create an MQTT Client Instance for custom actions.
-   * @returns {mqtt.MqttClient} MQTT Client Instance.
-   */
-  createMQTTInstance(): mqtt.MqttClient {
-    return createMQTTInstance(this.host, this.username, this.password);
+  async Delete() {
+    return payloadProcessor(
+      this.broker,
+      this.queries,
+      'delete',
+      this.database,
+      this.collection,
+      {}
+    );
   }
 }
