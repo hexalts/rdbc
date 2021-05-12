@@ -11,11 +11,10 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build && rm dist/*.map",
-    "debug": "yarn lint --fix && yarn build && node dist/rdbc.cjs.production.min.js",
+    "build": "yarn lint && tsdx build --format esm --minify true --writeMeta false && rm dist/*.map",
     "doc": "yarn typedoc src/index.ts",
     "test": "tsdx test",
-    "lint": "tsdx lint",
+    "lint": "tsdx lint --fix",
     "prepare": "yarn build",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -23,7 +22,7 @@
   "peerDependencies": {},
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "tsdx lint --fix"
     }
   },
   "prettier": {
@@ -34,15 +33,11 @@
   },
   "name": "@hexalts/rdbc",
   "author": "azharizkita",
-  "module": "dist/rdb.esm.js",
+  "module": "dist/rdb.esm.min.js",
   "size-limit": [
     {
-      "path": "dist/rdbc.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/rdbc.esm.js",
-      "limit": "10 KB"
+      "path": "dist/rdbc.esm.min.js",
+      "limit": "15 KB"
     }
   ],
   "devDependencies": {
