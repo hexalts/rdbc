@@ -11,9 +11,9 @@ export interface BrokerConfiguration {
    * Make sure you have access rights to the host
    *
    * @example
-   * host = 'ws://test.mosquitto.org:1883'
+   * host = 'mqtt://broker.hivemq.com:1883'
    */
-  host: string;
+  host?: string;
   /**
    * MQTT Username
    */
@@ -207,7 +207,7 @@ export default class RDB {
    * @param broker
    * @param database
    */
-  constructor(broker: BrokerConfiguration, database: string) {
+  constructor(broker: BrokerConfiguration = { host: 'mqtt://broker.hivemq.com:1883' }, database: string) {
     this.broker = broker;
     this.database = database;
   }
