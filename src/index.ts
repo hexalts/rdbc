@@ -207,7 +207,10 @@ export default class RDB {
    * @param broker
    * @param database
    */
-  constructor(broker: BrokerConfiguration = { host: 'mqtt://broker.hivemq.com:1883' }, database: string) {
+  constructor(
+    broker: BrokerConfiguration = { host: 'mqtt://broker.hivemq.com:1883' },
+    database: string
+  ) {
     this.broker = broker;
     this.database = database;
   }
