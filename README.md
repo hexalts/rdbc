@@ -202,4 +202,4 @@ changeCatName();
 
 ## Full API Documentation
 
-For deeper understanding of Hexatls Realtime Database APIs, please refer to [this dcumentation](https://hexalts.github.io/rdbc/classes/realtimedatabase.html).
+For deeper understanding of Hexatls Realtime Database APIs, please refer to [this dcumentation](https://hexalts.github.io/rdbc/classes/default.html).
