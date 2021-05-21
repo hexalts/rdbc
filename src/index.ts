@@ -82,14 +82,14 @@ export interface Payload {
   /**
    * Payload actual data.
    */
-  payload: Document[] | Document | string;
+  payload: any;
 }
 
 declare interface Stream {
-  on(event: 'data', listener: (payload: object | any) => void): this;
+  on(event: 'data', listener: (payload: any) => void): this;
   on(event: 'delete', listener: (payload: string) => void): this;
   once(event: 'off', listener: () => void): this;
-  once(event: 'data', listener: (payload: object) => void): this;
+  once(event: 'data', listener: (payload: any) => void): this;
   once(event: 'delete', listener: (payload: string) => void): this;
 }
 
