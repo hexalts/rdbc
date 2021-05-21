@@ -282,7 +282,7 @@ export class Collection {
   Where(
     field: string,
     operator: '==' | '<=' | '>=' | '<' | '>' | '!=',
-    value: string | number
+    value: any
   ) {
     if (!this.idSets) {
       if (field === '_id') {
