@@ -306,8 +306,8 @@ export class Collection {
     const clientConnection = createMQTTInstance(this.broker);
     if (method === 'all') {
       this.Get().then(result =>
-        Array.isArray(result)
-          ? result.forEach(document => stream.emit('data', document))
+        Array.isArray(result.payload)
+          ? result.payload.forEach(document => stream.emit('data', document))
           : ''
       );
     }
