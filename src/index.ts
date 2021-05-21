@@ -86,7 +86,7 @@ export interface Payload {
 }
 
 declare interface Stream {
-  on(event: 'data', listener: (payload: object) => void): this;
+  on(event: 'data', listener: (payload: object | any) => void): this;
   on(event: 'delete', listener: (payload: string) => void): this;
   once(event: 'off', listener: () => void): this;
   once(event: 'data', listener: (payload: object) => void): this;
