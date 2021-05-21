@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-r5",
+  "version": "0.2.0-r6",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "yarn lint && yarn doc && tsdx build --format esm --minify true --writeMeta false && rm dist/*.map",
+    "build": "yarn lint && yarn doc && tsdx build --minify true --writeMeta false && rm dist/*.map",
     "doc": "yarn typedoc src/index.ts",
     "test": "tsdx test",
     "lint": "tsdx lint --fix",
@@ -37,7 +37,7 @@
   "size-limit": [
     {
       "path": "dist/rdbc.esm.min.js",
-      "limit": "15 KB"
+      "limit": "25 KB"
     }
   ],
   "devDependencies": {
