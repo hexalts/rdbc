@@ -369,10 +369,10 @@ export class Collection {
               }
             });
             if (shouldPass) {
-              stream.emit('data', content);
+              stream.emit('data', content.payload);
             }
           } else {
-            stream.emit('data', content);
+            stream.emit('data', content.payload);
           }
         }
       });
