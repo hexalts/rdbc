@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-r6",
+  "version": "0.2.0-r7",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "yarn lint && yarn doc && tsdx build --minify true --writeMeta false && rm dist/*.map",
+    "build": "yarn lint && yarn doc && tsdx build --writeMeta false && rm dist/*.map",
     "doc": "yarn typedoc src/index.ts",
     "test": "tsdx test",
     "lint": "tsdx lint --fix",
@@ -33,11 +33,15 @@
   },
   "name": "@hexalts/rdbc",
   "author": "azharizkita",
-  "module": "dist/rdb.esm.min.js",
+  "module": "dist/rdb.esm.js",
   "size-limit": [
     {
-      "path": "dist/rdbc.esm.min.js",
-      "limit": "25 KB"
+      "path": "dist/rdbc.esm.js",
+      "limit": "40 KB"
+    },
+    {
+      "path": "dist/rdbc.cjs.production.min.js",
+      "limit": "15 KB"
     }
   ],
   "devDependencies": {
