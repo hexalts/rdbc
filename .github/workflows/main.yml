@@ -22,9 +22,6 @@ jobs:
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
-      - name: Lint
-        run: yarn lint
-
       - name: Test
         env:
           BROKER_HOSTNAME: ${{ secrets.BROKER_HOSTNAME }}
