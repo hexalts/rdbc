@@ -63,9 +63,6 @@ export interface Targets {
   collection: string;
 }
 
-/**
- * Database response.
- */
 export interface Payload {
   /**
    * Payload type.
@@ -83,6 +80,14 @@ export interface Payload {
    * Payload actual data.
    */
   payload: any;
+}
+
+/**
+ * Database response.
+ */
+export interface RespondType {
+  pattern: string;
+  data: Payload;
 }
 
 declare interface Stream {
@@ -175,13 +180,13 @@ const payloadProcessor = async (
       clientConnection.once('connect', () => {
         clientConnection.subscribe(topics.subscribe);
         clientConnection.on('message', (_topic, payload) => {
-          const response: Payload = JSON.parse(payload.toString());
-          if (response.type === 'end') {
+          const response: RespondType = JSON.parse(payload.toString());
+          if (response.data.type === 'end') {
             clientConnection.end();
-          } else if (response.type === 'error') {
+          } else if (response.data.type === 'error') {
             reject(response);
           } else {
-            resolve(response);
+            resolve(response.data);
           }
         });
         clientConnection.publish(
@@ -316,47 +321,47 @@ export class Collection {
         `stream/${this.database}/${this.collection}/#`
       );
       clientConnection.on('message', (_topic, payload) => {
-        const content: Payload = JSON.parse(payload.toString());
-        if (content.operation === 'delete') {
-          stream.emit('delete', content);
+        const content: RespondType = JSON.parse(payload.toString());
+        if (content.data.operation === 'delete') {
+          stream.emit('delete', content.data);
         } else {
           if (this.queries.length !== 0) {
             let shouldPass = true;
             this.queries.forEach(query => {
               if (
-                !Array.isArray(content.payload) &&
-                typeof content.payload === 'object' &&
-                typeof content.payload[query.field] !== 'undefined' &&
+                !Array.isArray(content.data.payload) &&
+                typeof content.data.payload === 'object' &&
+                typeof content.data.payload[query.field] !== 'undefined' &&
                 shouldPass
               ) {
                 switch (query.operator) {
                   case '!=':
-                    if (!(content.payload[query.field] !== query.value)) {
+                    if (!(content.data.payload[query.field] !== query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '<':
-                    if (!(content.payload[query.field] < query.value)) {
+                    if (!(content.data.payload[query.field] < query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '<=':
-                    if (!(content.payload[query.field] <= query.value)) {
+                    if (!(content.data.payload[query.field] <= query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '==':
-                    if (!(content.payload[query.field] === query.value)) {
+                    if (!(content.data.payload[query.field] === query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '>':
-                    if (!(content.payload[query.field] > query.value)) {
+                    if (!(content.data.payload[query.field] > query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '>=':
-                    if (!(content.payload[query.field] >= query.value)) {
+                    if (!(content.data.payload[query.field] >= query.value)) {
                       shouldPass = false;
                     }
                     break;
@@ -369,10 +374,10 @@ export class Collection {
               }
             });
             if (shouldPass) {
-              stream.emit('data', content.payload);
+              stream.emit('data', content.data.payload);
             }
           } else {
-            stream.emit('data', content.payload);
+            stream.emit('data', content.data.payload);
           }
         }
       });

@@ -1,15 +1,17 @@
 import RDBC from '../src';
+import { env } from 'process';
 
-const database = 'jembatanku';
-const collection = 'bridge';
+const database = 'tester';
+const collection = 'test';
 const RDB = new RDBC(
   {
-    host: 'mqtt://broker.hivemq.com:1883',
+    host: `${env.BROKER_PROTOCOL}://${env.BROKER_HOSTNAME}:${env.BROKER_PROTOCOL}`,
+    username: env.BROKER_USERNAME,
+    password: env.BROKER_PASSWORD,
   },
   database
 );
 const instance = RDB.Collection(collection);
-
 describe('Realtime Database instance test scenario', () => {
   it('Database target sets correctly', () => {
     expect(instance.Status().database).toEqual(database);
