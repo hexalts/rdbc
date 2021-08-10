@@ -27,11 +27,11 @@ jobs:
 
       - name: Test
         env:
-          BROKER_HOSTNAME: ${{ secrets.BROKER_HOSTNAME }}
-          BROKER_PROTOCOL: ${{ secrets.BROKER_PROTOCOL  }}
-          BROKER_USERNAME: ${{ secrets.BROKER_USERNAME  }}
-          BROKER_PASSWORD: ${{ secrets.BROKER_PASSWORD  }}
-          BROKER_PORT: ${{ secrets.BROKER_PORT  }}
+          BROKER_HOSTNAME: ${{ secrets.hexalts.BROKER_HOSTNAME }}
+          BROKER_PROTOCOL: ${{ secrets.hexalts.BROKER_PROTOCOL  }}
+          BROKER_USERNAME: ${{ secrets.hexalts.BROKER_USERNAME  }}
+          BROKER_PASSWORD: ${{ secrets.hexalts.BROKER_PASSWORD  }}
+          BROKER_PORT: ${{ secrets.hexalts.BROKER_PORT  }}
         run: yarn test --ci --maxWorkers=2
 
       - name: Build
