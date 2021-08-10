@@ -29,6 +29,7 @@ jobs:
           BROKER_USERNAME: ${{ secrets.BROKER_USERNAME  }}
           BROKER_PASSWORD: ${{ secrets.BROKER_PASSWORD  }}
           BROKER_PORT: ${{ secrets.BROKER_PORT  }}
+          INSTANCE_ID: ${{ secrets.INSTANCE_ID  }}
         run: yarn test --ci --maxWorkers=2
 
       - name: Build
