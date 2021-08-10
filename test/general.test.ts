@@ -3,9 +3,11 @@ import { env } from 'process';
 
 const database = 'tester';
 const collection = 'test';
+const brokerHost = `${env.BROKER_PROTOCOL}://${env.BROKER_HOSTNAME}:${env.BROKER_PORT}`
+console.log(brokerHost)
 const RDB = new RDBC(
   {
-    host: `${env.BROKER_PROTOCOL}://${env.BROKER_HOSTNAME}:${env.BROKER_PORT}`,
+    host: brokerHost,
     username: env.BROKER_USERNAME,
     password: env.BROKER_PASSWORD,
   },
