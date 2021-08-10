@@ -5,7 +5,7 @@ const database = 'tester';
 const collection = 'test';
 const RDB = new RDBC(
   {
-    host: `${env.BROKER_PROTOCOL}://${env.BROKER_HOSTNAME}:${env.BROKER_PROTOCOL}`,
+    host: `${env.BROKER_PROTOCOL}://${env.BROKER_HOSTNAME}:${env.BROKER_PORT}`,
     username: env.BROKER_USERNAME,
     password: env.BROKER_PASSWORD,
   },
