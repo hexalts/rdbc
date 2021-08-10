@@ -61,6 +61,7 @@ export interface Targets {
    * Collection name.
    */
   collection: string;
+  instanceId: string;
 }
 
 export interface Payload {
@@ -122,6 +123,7 @@ export const createMQTTInstance = (
 };
 
 const payloadProcessor = async (
+  instanceId: string,
   broker: BrokerConfiguration,
   queries: Query[],
   action: 'create' | 'get' | 'update' | 'delete',
@@ -129,7 +131,7 @@ const payloadProcessor = async (
   collection: string,
   payload: object
 ) => {
-  return new Promise<Payload>((resolve, reject) => {
+  return new Promise<{ [field: string]: any }[]>((resolve, reject) => {
     let shouldPass = false;
     switch (action) {
       case 'create':
@@ -167,8 +169,8 @@ const payloadProcessor = async (
     if (shouldPass) {
       const id = Date.now();
       const topics = {
-        publish: `request/${database}/${collection}/${id}`,
-        subscribe: `payload/${database}/${collection}/${id}`,
+        publish: `${instanceId}/request/${database}/${collection}/${id}`,
+        subscribe: `${instanceId}/payload/${database}/${collection}/${id}`,
       };
       const requestPayload: Payload = {
         type: 'start',
@@ -178,15 +180,17 @@ const payloadProcessor = async (
       };
       const clientConnection = createMQTTInstance(broker);
       clientConnection.once('connect', () => {
+        const dataContainer: { [field: string]: any }[] = [];
         clientConnection.subscribe(topics.subscribe);
         clientConnection.on('message', (_topic, payload) => {
           const response: RespondType = JSON.parse(payload.toString());
           if (response.data.type === 'end') {
+            resolve(dataContainer);
             clientConnection.end();
           } else if (response.data.type === 'error') {
             reject(response);
-          } else {
-            resolve(response.data);
+          } else if (response.data.type === 'reply') {
+            dataContainer.push(...response.data.payload);
           }
         });
         clientConnection.publish(
@@ -204,21 +208,15 @@ const payloadProcessor = async (
  * Realtime Database by Hexalts.
  */
 export default class RDB {
-  private broker: BrokerConfiguration;
-  private database: string;
   /**
    * Realtime Database Class Constructor.
-   *
-   * @param broker
-   * @param database
    */
   constructor(
-    broker: BrokerConfiguration = { host: 'mqtt://broker.hivemq.com:1883' },
-    database: string
-  ) {
-    this.broker = broker;
-    this.database = database;
-  }
+    private broker: BrokerConfiguration = {
+      host: 'mqtt://broker.hivemq.com:1883',
+    },
+    private instanceId: string
+  ) {}
   /**
    * Create an MQTT Instance for custom actions.
    */
@@ -227,11 +225,28 @@ export default class RDB {
   }
   /**
    * Set a collection name.
-   *
-   * @param collection
+   */
+  Database(database: string): Database {
+    return new Database(this.instanceId, this.broker, database);
+  }
+}
+
+export class Database {
+  constructor(
+    private instanceId: string,
+    private broker: BrokerConfiguration,
+    private database: string
+  ) {}
+  /**
+   * Set a collection name.
    */
   Collection(collection: string): Collection {
-    return new Collection(this.broker, this.database, collection);
+    return new Collection(
+      this.instanceId,
+      this.broker,
+      this.database,
+      collection
+    );
   }
 }
 
@@ -239,26 +254,17 @@ export default class RDB {
  * Collection Class.
  */
 export class Collection {
-  private broker: BrokerConfiguration;
-  private database: string;
-  private collection: string;
   private queries: Query[] = [];
   private idSets: boolean = false;
   /**
    * Collection Class Constructor.
-   * @param broker
-   * @param database
-   * @param collection
    */
   constructor(
-    broker: BrokerConfiguration,
-    database: string,
-    collection: string
-  ) {
-    this.broker = broker;
-    this.database = database;
-    this.collection = collection;
-  }
+    private instanceId: string,
+    private broker: BrokerConfiguration,
+    private database: string,
+    private collection: string
+  ) {}
   /**
    * Clear the Where query.
    */
@@ -272,6 +278,7 @@ export class Collection {
     return {
       collection: this.collection,
       database: this.database,
+      instanceId: this.instanceId,
     };
   }
   /**
@@ -280,9 +287,6 @@ export class Collection {
    * @example
    * Collection.Where('fieldName', '==', 5)
    *
-   * @param field
-   * @param operator
-   * @param value
    */
   Where(
     field: string,
@@ -311,19 +315,17 @@ export class Collection {
     const clientConnection = createMQTTInstance(this.broker);
     if (method === 'all') {
       this.Get().then(result =>
-        Array.isArray(result.payload)
-          ? result.payload.forEach(document => stream.emit('data', document))
-          : ''
+        result.forEach(document => stream.emit('data', document))
       );
     }
     clientConnection.once('connect', () => {
       clientConnection.subscribe(
-        `stream/${this.database}/${this.collection}/#`
+        `${this.instanceId}/stream/${this.database}/${this.collection}/#`
       );
       clientConnection.on('message', (_topic, payload) => {
         const content: RespondType = JSON.parse(payload.toString());
         if (content.data.operation === 'delete') {
-          stream.emit('delete', content.data);
+          stream.emit('delete', content.data.payload);
         } else {
           if (this.queries.length !== 0) {
             let shouldPass = true;
@@ -394,6 +396,7 @@ export class Collection {
    */
   async Create(payload: Document) {
     return payloadProcessor(
+      this.instanceId,
       this.broker,
       this.queries,
       'create',
@@ -407,6 +410,7 @@ export class Collection {
    */
   async Get() {
     return payloadProcessor(
+      this.instanceId,
       this.broker,
       this.queries,
       'get',
@@ -422,6 +426,7 @@ export class Collection {
    */
   async Update(payload: object) {
     return payloadProcessor(
+      this.instanceId,
       this.broker,
       this.queries,
       'update',
@@ -435,6 +440,7 @@ export class Collection {
    */
   async Delete() {
     return payloadProcessor(
+      this.instanceId,
       this.broker,
       this.queries,
       'delete',

@@ -25,20 +25,23 @@ First, you need to set up the RDB Configuration.
 ```javascript
 import RDB from '@hexalts/rdbc';
 
-const database = 'jembatanku';
+const instanceId = 'random UUIDv4'
 const RDB = new RDB(
   {
-    host: 'mqtt://broker.hivemq.com:1883',
+    host: 'wss://broker.address.com:8883',
   },
-  database
+  instanceId
 );
 
 ```
 
-Next step is to create a Collection instance. It goes like this.
+> You can try to generate an UUID v4 on [this page](https://www.uuidgenerator.net/version4), and make sure the client instanceId matches with the server instanceId. Otherwise it won't work.
+
+Next step is to set up the database target and the collection we want to use.
 
 ```javascript
-const instance = RDB.Collection('cats');
+const instance = RDB.Database('hexalts');
+instance.Collection('cats');
 ```
 
 Note that you only need to do this setup for once. It is dead simple. Then you can get all those `cat` like this.
@@ -46,7 +49,7 @@ Note that you only need to do this setup for once. It is dead simple. Then you c
 ```javascript
 const getAllCats = async () => {
   const result = await instance.Get();
-  console.log(result.payload);
+  console.log(result);
 };
 
 getAllCats();
@@ -54,13 +57,13 @@ getAllCats();
 
 ### Stream
 
-What if you want to listen to changes that affected any documents inside `cats` collection, while you get all documents inside `cats` collection at once? No worries, because it is as easy as
+What if you want to listen to changes that affected any documents inside `cats` collection, while you get all documents inside `cats` collection at once? No worries, because it is as easy as this.
 
 ```javascript
 const watchThoseCats = async () => {
   const stream = instance.Stream('all');
   stream.on('data', (data) => {
-    console.log(data.payload);
+    console.log(data);
   })
 };
 
@@ -101,15 +104,15 @@ What if you want to get documents with multiple rules? Let's assume you have suc
 
 ```
 
-Let's say you want to get any `persian medium` cats with age greater than 1. It goes like this.
+Let's say you want to get any `persian medium` cats with age greater than `1`. It goes like this.
 
 ```javascript
 const whereAreThoseCats = async () => {
-  const stream = instance.Stream('all');
   instance.Where('race', '==', 'persian medium')
   instance.Where('age', '>', 1)
+  const stream = instance.Stream('all');
   stream.on('data', (data) => {
-    console.log(data.payload);
+    console.log(data);
   });
 };
 

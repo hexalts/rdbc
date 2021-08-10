@@ -93,9 +93,6 @@
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Collection.html#broker" class="tsd-kind-icon">broker</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Collection.html#collection" class="tsd-kind-icon">collection</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Collection.html#database" class="tsd-kind-icon">database</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Collection.html#idSets" class="tsd-kind-icon">id<wbr>Sets</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Collection.html#queries" class="tsd-kind-icon">queries</a></li>
 							</ul>
@@ -122,13 +119,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Collection<span class="tsd-signature-symbol">(</span>broker<span class="tsd-signature-symbol">: </span><a href="../interfaces/BrokerConfiguration.html" class="tsd-signature-type" data-tsd-kind="Interface">BrokerConfiguration</a>, database<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, collection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Collection.html" class="tsd-signature-type" data-tsd-kind="Class">Collection</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Collection<span class="tsd-signature-symbol">(</span>instanceId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, broker<span class="tsd-signature-symbol">: </span><a href="../interfaces/BrokerConfiguration.html" class="tsd-signature-type" data-tsd-kind="Interface">BrokerConfiguration</a>, database<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, collection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Collection.html" class="tsd-signature-type" data-tsd-kind="Class">Collection</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L253">index.ts:253</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L262">index.ts:262</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -139,6 +136,9 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
+									<h5>instanceId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
 									<h5>broker: <a href="../interfaces/BrokerConfiguration.html" class="tsd-signature-type" data-tsd-kind="Interface">BrokerConfiguration</a></h5>
 								</li>
 								<li>
@@ -146,10 +146,6 @@
 								</li>
 								<li>
 									<h5>collection: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-										</div>
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="Collection.html" class="tsd-signature-type" data-tsd-kind="Class">Collection</a></h4>
@@ -160,42 +156,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="broker" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> broker</h3>
-					<div class="tsd-signature tsd-kind-icon">broker<span class="tsd-signature-symbol">:</span> <a href="../interfaces/BrokerConfiguration.html" class="tsd-signature-type" data-tsd-kind="Interface">BrokerConfiguration</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L242">index.ts:242</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="collection" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> collection</h3>
-					<div class="tsd-signature tsd-kind-icon">collection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L244">index.ts:244</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="database" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> database</h3>
-					<div class="tsd-signature tsd-kind-icon">database<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L243">index.ts:243</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="idSets" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> id<wbr>Sets</h3>
 					<div class="tsd-signature tsd-kind-icon">id<wbr>Sets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L246">index.ts:246</a></li>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L258">index.ts:258</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -205,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">queries<span class="tsd-signature-symbol">:</span> <a href="../interfaces/Query.html" class="tsd-signature-type" data-tsd-kind="Interface">Query</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L245">index.ts:245</a></li>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L257">index.ts:257</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -222,7 +188,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L265">index.ts:265</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L271">index.ts:271</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,13 +204,13 @@
 					<a name="Create" class="tsd-anchor"></a>
 					<h3>Create</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Create<span class="tsd-signature-symbol">(</span>payload<span class="tsd-signature-symbol">: </span><a href="../interfaces/Document.html" class="tsd-signature-type" data-tsd-kind="Interface">Document</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Create<span class="tsd-signature-symbol">(</span>payload<span class="tsd-signature-symbol">: </span><a href="../interfaces/Document.html" class="tsd-signature-type" data-tsd-kind="Interface">Document</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L395">index.ts:395</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L397">index.ts:397</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -260,7 +226,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -268,13 +234,13 @@
 					<a name="Delete" class="tsd-anchor"></a>
 					<h3>Delete</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Delete<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Delete<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L436">index.ts:436</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L441">index.ts:441</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -282,7 +248,7 @@
 									<p>Delete one or multiple documents from a Collection.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -290,13 +256,13 @@
 					<a name="Get" class="tsd-anchor"></a>
 					<h3>Get</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Get<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Get<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L408">index.ts:408</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L411">index.ts:411</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -304,7 +270,7 @@
 									<p>Get documents from a Collection.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -318,7 +284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L271">index.ts:271</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L277">index.ts:277</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -340,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L309">index.ts:309</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L313">index.ts:313</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -364,13 +330,13 @@
 					<a name="Update" class="tsd-anchor"></a>
 					<h3>Update</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Update<span class="tsd-signature-symbol">(</span>payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Update<span class="tsd-signature-symbol">(</span>payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L423">index.ts:423</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L427">index.ts:427</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -386,7 +352,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -400,7 +366,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L287">index.ts:287</a></li>
+									<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/2445433/src/index.ts#L291">index.ts:291</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -423,8 +389,6 @@
 								</li>
 								<li>
 									<h5>value: <span class="tsd-signature-type">any</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="Collection.html" class="tsd-signature-type" data-tsd-kind="Class">Collection</a></h4>
@@ -450,15 +414,6 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="Collection.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="Collection.html#broker" class="tsd-kind-icon">broker</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="Collection.html#collection" class="tsd-kind-icon">collection</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="Collection.html#database" class="tsd-kind-icon">database</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="Collection.html#idSets" class="tsd-kind-icon">id<wbr>Sets</a>
@@ -494,6 +449,9 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class">
+						<a href="Database.html" class="tsd-kind-icon">Database</a>
+					</li>
 					<li class=" tsd-kind-class">
 						<a href="default.html" class="tsd-kind-icon">default</a>
 					</li>

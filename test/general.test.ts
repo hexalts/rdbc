@@ -1,18 +1,17 @@
 import RDBC from '../src';
-import { env } from 'process';
 
 const database = 'tester';
 const collection = 'test';
-const brokerHost = `${env.BROKER_PROTOCOL}://${env.BROKER_HOSTNAME}:${env.BROKER_PORT}`;
+const brokerHost = `${process.env.BROKER_PROTOCOL}://${process.env.BROKER_HOSTNAME}:${process.env.BROKER_PORT}`;
 const RDB = new RDBC(
   {
     host: brokerHost,
-    username: env.BROKER_USERNAME,
-    password: env.BROKER_PASSWORD,
+    username: process.env.BROKER_USERNAME,
+    password: process.env.BROKER_PASSWORD,
   },
-  database
+  process.env.INSTANCE_ID
 );
-const instance = RDB.Collection(collection);
+const instance = RDB.Database(database).Collection(collection);
 describe('Realtime Database instance test scenario', () => {
   it('Database target sets correctly', () => {
     expect(instance.Status().database).toEqual(database);
@@ -43,28 +42,32 @@ describe('Realtime Database instance test scenario', () => {
 });
 
 describe('Collection functions test scenario', () => {
-  afterEach(() => {
-    instance.Clear();
-  });
-  it('Get', async () => {
-    const response = await instance.Get();
-    expect(response.type !== 'error').toEqual(true);
-  });
+  let referenceId = '';
   it('Create', async () => {
     const response = await instance.Create({
       type: 'tester',
       test: 'from jest',
     });
-    expect(response.type !== 'error').toEqual(true);
+    referenceId = response[0].insertedId;
+    instance.Where('_id', '==', referenceId);
+    expect(response[0].acknowledged).toEqual(true);
+  });
+  it('Get', async () => {
+    const response = await instance.Get();
+    expect(response.length === 1).toEqual(true);
   });
   it('Update', async () => {
-    instance.Where('type', '==', 'tester');
     const response = await instance.Update({ test: 'should be true' });
-    expect(response.type !== 'error').toEqual(true);
+    expect(
+      response[0].acknowledged &&
+        response[0].modifiedCount === 1 &&
+        response[0].matchedCount === 1
+    ).toEqual(true);
   });
   it('Delete', async () => {
-    instance.Where('type', '==', 'tester');
     const response = await instance.Delete();
-    expect(response.type !== 'error').toEqual(true);
+    expect(response[0].acknowledged && response[0].deletedCount === 1).toEqual(
+      true
+    );
   });
 });

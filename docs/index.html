@@ -82,22 +82,26 @@
 				<p>First, you need to set up the RDB Configuration.</p>
 				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">RDB</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@hexalts/rdbc&#039;</span><span style="color: #000000">;</span>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">database</span><span style="color: #000000"> = </span><span style="color: #A31515">&#039;jembatanku&#039;</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">instanceId</span><span style="color: #000000"> = </span><span style="color: #A31515">&#039;random UUIDv4&#039;</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">RDB</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RDB</span><span style="color: #000000">(</span>
 <span style="color: #000000">  {</span>
-<span style="color: #000000">    </span><span style="color: #001080">host:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;mqtt://broker.hivemq.com:1883&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">host:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;wss://broker.address.com:8883&#039;</span><span style="color: #000000">,</span>
 <span style="color: #000000">  },</span>
-<span style="color: #000000">  </span><span style="color: #001080">database</span>
+<span style="color: #000000">  </span><span style="color: #001080">instanceId</span>
 <span style="color: #000000">);</span>
 
 </code></pre>
-				<p>Next step is to create a Collection instance. It goes like this.</p>
-				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">instance</span><span style="color: #000000"> = </span><span style="color: #0070C1">RDB</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
+				<blockquote>
+					<p>You can try to generate an UUID v4 on <a href="https://www.uuidgenerator.net/version4">this page</a>, and make sure the client instanceId matches with the server instanceId. Otherwise it won&#39;t work.</p>
+				</blockquote>
+				<p>Next step is to set up the database target and the collection we want to use.</p>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">instance</span><span style="color: #000000"> = </span><span style="color: #0070C1">RDB</span><span style="color: #000000">.</span><span style="color: #795E26">Database</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;hexalts&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Collection</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cats&#039;</span><span style="color: #000000">);</span>
 </code></pre>
 				<p>Note that you only need to do this setup for once. It is dead simple. Then you can get all those <code>cat</code> like this.</p>
 				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">getAllCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Get</span><span style="color: #000000">();</span>
-<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">.</span><span style="color: #001080">payload</span><span style="color: #000000">);</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">);</span>
 <span style="color: #000000">};</span>
 
 <span style="color: #795E26">getAllCats</span><span style="color: #000000">();</span>
@@ -105,11 +109,11 @@
 				<a href="#stream" id="stream" style="color: inherit; text-decoration: none;">
 					<h3>Stream</h3>
 				</a>
-				<p>What if you want to listen to changes that affected any documents inside <code>cats</code> collection, while you get all documents inside <code>cats</code> collection at once? No worries, because it is as easy as</p>
+				<p>What if you want to listen to changes that affected any documents inside <code>cats</code> collection, while you get all documents inside <code>cats</code> collection at once? No worries, because it is as easy as this.</p>
 				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">watchThoseCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">stream</span><span style="color: #000000"> = </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Stream</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;all&#039;</span><span style="color: #000000">);</span>
 <span style="color: #000000">  </span><span style="color: #001080">stream</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;data&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #001080">payload</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">);</span>
 <span style="color: #000000">  })</span>
 <span style="color: #000000">};</span>
 
@@ -147,13 +151,13 @@
 <span style="color: #000000">]</span>
 
 </code></pre>
-				<p>Let&#39;s say you want to get any <code>persian medium</code> cats with age greater than 1. It goes like this.</p>
+				<p>Let&#39;s say you want to get any <code>persian medium</code> cats with age greater than <code>1</code>. It goes like this.</p>
 				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">whereAreThoseCats</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">stream</span><span style="color: #000000"> = </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Stream</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;all&#039;</span><span style="color: #000000">);</span>
 <span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;race&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;==&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;persian medium&#039;</span><span style="color: #000000">)</span>
 <span style="color: #000000">  </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Where</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;age&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;&gt;&#039;</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">)</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">stream</span><span style="color: #000000"> = </span><span style="color: #001080">instance</span><span style="color: #000000">.</span><span style="color: #795E26">Stream</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;all&#039;</span><span style="color: #000000">);</span>
 <span style="color: #000000">  </span><span style="color: #001080">stream</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;data&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #001080">payload</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">);</span>
 <span style="color: #000000">  });</span>
 <span style="color: #000000">};</span>
 
@@ -254,6 +258,9 @@
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
 						<a href="classes/Collection.html" class="tsd-kind-icon">Collection</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/Database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/default.html" class="tsd-kind-icon">default</a>
