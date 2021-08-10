@@ -22,7 +22,7 @@ describe('Realtime Database instance test scenario', () => {
     expect(instance.Status().collection).toEqual(collection);
   });
   const client = RDB.CreateMQTTInstance();
-  it('Connect to MQTT host', async () => {
+  it('Connect to broker host', async () => {
     const result = new Promise<boolean>((resolve, reject) => {
       const timeout = setTimeout(() => {
         resolve(false);
