@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Payload | @hexalts/rdbc</title>
+	<title>BrokerConfiguration | @hexalts/rdbc</title>
 	<meta name="description" content="Documentation for @hexalts/rdbc">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">@hexalts/rdbc</a>
 				</li>
 				<li>
-					<a href="payload.html">Payload</a>
+					<a href="BrokerConfiguration.html">BrokerConfiguration</a>
 				</li>
 			</ul>
-			<h1>Interface Payload</h1>
+			<h1>Interface BrokerConfiguration</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Database response.</p>
+						<p>MQTT Broker Host Configuration</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Payload</span>
+						<span class="target">BrokerConfiguration</span>
 					</li>
 				</ul>
 			</section>
@@ -87,10 +87,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="payload.html#operation" class="tsd-kind-icon">operation</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="payload.html#payload-1" class="tsd-kind-icon">payload</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="payload.html#query" class="tsd-kind-icon">query</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="payload.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="BrokerConfiguration.html#host" class="tsd-kind-icon">host</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="BrokerConfiguration.html#password" class="tsd-kind-icon">password</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="BrokerConfiguration.html#username" class="tsd-kind-icon">username</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,62 +98,53 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="operation" class="tsd-anchor"></a>
-					<h3>operation</h3>
-					<div class="tsd-signature tsd-kind-icon">operation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;create&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;get&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;update&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;replace&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;delete&quot;</span></div>
+					<a name="host" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> host</h3>
+					<div class="tsd-signature tsd-kind-icon">host<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L77">index.ts:77</a></li>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L16">index.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Operation type.</p>
+							<p>MQTT Host</p>
+						</div>
+						<p>Make sure you have access rights to the host</p>
+						<dl class="tsd-comment-tags">
+							<dt>example</dt>
+							<dd><p>host = &#39;mqtt://broker.hivemq.com:1883&#39;</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="password" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> password</h3>
+					<div class="tsd-signature tsd-kind-icon">password<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L24">index.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>MQTT Password</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="payload-1" class="tsd-anchor"></a>
-					<h3>payload</h3>
-					<div class="tsd-signature tsd-kind-icon">payload<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="username" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> username</h3>
+					<div class="tsd-signature tsd-kind-icon">username<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L85">index.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L20">index.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Payload actual data.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="query" class="tsd-anchor"></a>
-					<h3>query</h3>
-					<div class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">:</span> <a href="query.html" class="tsd-signature-type" data-tsd-kind="Interface">Query</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L81">index.ts:81</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Query list.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;start&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;reply&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;end&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;changeStream&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L73">index.ts:73</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Payload type.</p>
+							<p>MQTT Username</p>
 						</div>
 					</div>
 				</section>
@@ -171,46 +161,46 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="../classes/collection.html" class="tsd-kind-icon">Collection</a>
+						<a href="../classes/Collection.html" class="tsd-kind-icon">Collection</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="../classes/default.html" class="tsd-kind-icon">default</a>
 					</li>
-					<li class=" tsd-kind-interface">
-						<a href="brokerconfiguration.html" class="tsd-kind-icon">Broker<wbr>Configuration</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="document.html" class="tsd-kind-icon">Document</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="payload.html" class="tsd-kind-icon">Payload</a>
+						<a href="BrokerConfiguration.html" class="tsd-kind-icon">Broker<wbr>Configuration</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="payload.html#operation" class="tsd-kind-icon">operation</a>
+								<a href="BrokerConfiguration.html#host" class="tsd-kind-icon">host</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="payload.html#payload-1" class="tsd-kind-icon">payload</a>
+								<a href="BrokerConfiguration.html#password" class="tsd-kind-icon">password</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="payload.html#query" class="tsd-kind-icon">query</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="payload.html#type" class="tsd-kind-icon">type</a>
+								<a href="BrokerConfiguration.html#username" class="tsd-kind-icon">username</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface">
-						<a href="query.html" class="tsd-kind-icon">Query</a>
+						<a href="Document.html" class="tsd-kind-icon">Document</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="targets.html" class="tsd-kind-icon">Targets</a>
+						<a href="Payload.html" class="tsd-kind-icon">Payload</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="Query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="RespondType.html" class="tsd-kind-icon">Respond<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="Targets.html" class="tsd-kind-icon">Targets</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../modules.html#createmqttinstance" class="tsd-kind-icon">createMQTTInstance</a>
+						<a href="../modules.html#createMQTTInstance" class="tsd-kind-icon">createMQTTInstance</a>
 					</li>
 				</ul>
 			</nav>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Query | @hexalts/rdbc</title>
+	<title>RespondType | @hexalts/rdbc</title>
 	<meta name="description" content="Documentation for @hexalts/rdbc">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">@hexalts/rdbc</a>
 				</li>
 				<li>
-					<a href="query.html">Query</a>
+					<a href="RespondType.html">RespondType</a>
 				</li>
 			</ul>
-			<h1>Interface Query</h1>
+			<h1>Interface RespondType</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Query template.</p>
+						<p>Database response.</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Query</span>
+						<span class="target">RespondType</span>
 					</li>
 				</ul>
 			</section>
@@ -87,9 +87,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="query.html#field" class="tsd-kind-icon">field</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="query.html#operator" class="tsd-kind-icon">operator</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="query.html#value" class="tsd-kind-icon">value</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="RespondType.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="RespondType.html#pattern" class="tsd-kind-icon">pattern</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,49 +97,24 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="field" class="tsd-anchor"></a>
-					<h3>field</h3>
-					<div class="tsd-signature tsd-kind-icon">field<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="data" class="tsd-anchor"></a>
+					<h3>data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <a href="Payload.html" class="tsd-signature-type" data-tsd-kind="Interface">Payload</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L34">index.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L90">index.ts:90</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Document field name.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="operator" class="tsd-anchor"></a>
-					<h3>operator</h3>
-					<div class="tsd-signature tsd-kind-icon">operator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;&#x3D;&#x3D;&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;&lt;&#x3D;&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;&gt;&#x3D;&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;&lt;&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;&gt;&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;!&#x3D;&quot;</span></div>
+					<a name="pattern" class="tsd-anchor"></a>
+					<h3>pattern</h3>
+					<div class="tsd-signature tsd-kind-icon">pattern<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L38">index.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/a56e6db/src/index.ts#L89">index.ts:89</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Query selector.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="value" class="tsd-anchor"></a>
-					<h3>value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hexalts/rdbc/blob/7a0e823/src/index.ts#L42">index.ts:42</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Value to compare.</p>
-						</div>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -155,43 +129,43 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="../classes/collection.html" class="tsd-kind-icon">Collection</a>
+						<a href="../classes/Collection.html" class="tsd-kind-icon">Collection</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="../classes/default.html" class="tsd-kind-icon">default</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="brokerconfiguration.html" class="tsd-kind-icon">Broker<wbr>Configuration</a>
+						<a href="BrokerConfiguration.html" class="tsd-kind-icon">Broker<wbr>Configuration</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="document.html" class="tsd-kind-icon">Document</a>
+						<a href="Document.html" class="tsd-kind-icon">Document</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="payload.html" class="tsd-kind-icon">Payload</a>
+						<a href="Payload.html" class="tsd-kind-icon">Payload</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="Query.html" class="tsd-kind-icon">Query</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="query.html" class="tsd-kind-icon">Query</a>
+						<a href="RespondType.html" class="tsd-kind-icon">Respond<wbr>Type</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="query.html#field" class="tsd-kind-icon">field</a>
+								<a href="RespondType.html#data" class="tsd-kind-icon">data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="query.html#operator" class="tsd-kind-icon">operator</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="query.html#value" class="tsd-kind-icon">value</a>
+								<a href="RespondType.html#pattern" class="tsd-kind-icon">pattern</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface">
-						<a href="targets.html" class="tsd-kind-icon">Targets</a>
+						<a href="Targets.html" class="tsd-kind-icon">Targets</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../modules.html#createmqttinstance" class="tsd-kind-icon">createMQTTInstance</a>
+						<a href="../modules.html#createMQTTInstance" class="tsd-kind-icon">createMQTTInstance</a>
 					</li>
 				</ul>
 			</nav>
