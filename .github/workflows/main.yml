@@ -29,10 +29,8 @@ jobs:
           BROKER_USERNAME: ${{ secrets.BROKER_USERNAME  }}
           BROKER_PASSWORD: ${{ secrets.BROKER_PASSWORD  }}
           BROKER_PORT: ${{ secrets.BROKER_PORT  }}
-        # run: yarn test --ci --maxWorkers=2
-
-      - name: Test printing your secret (Remove this step in production)
         run: cat $HOME/secrets/my_secret.json
+        run: yarn test --ci --maxWorkers=2
 
       - name: Build
         run: yarn build
