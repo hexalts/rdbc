@@ -1,10 +1,6 @@
-# Realtime Database
-
-Hexalts Realtime Database is an alternative to Firestore by Google's Firebase.
-
 ![CI Workflow](https://github.com/hexalts/rdbc/actions/workflows/main.yml/badge.svg)
 
-> Backend database handler will soon be published! I am preparing the installation documentation right now. Stay tuned!
+> Make sure you have set up the RDB Server side. Please refer to [this](https://github.com/hexalts/rdb) link.
 
 ## Instalation
 
