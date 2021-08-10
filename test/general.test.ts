@@ -10,7 +10,7 @@ const RDB = new RDBC(
     password: env.BROKER_PASSWORD,
   },
   database
-);
+)
 const instance = RDB.Collection(collection);
 describe('Realtime Database instance test scenario', () => {
   it('Database target sets correctly', () => {
