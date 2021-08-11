@@ -3,13 +3,14 @@ import RDBC from '../src';
 const database = 'tester';
 const collection = 'test';
 const brokerHost = `${process.env.BROKER_PROTOCOL}://${process.env.BROKER_HOSTNAME}:${process.env.BROKER_PORT}`;
+const instanceId = process.env.INSTANCE_ID ? process.env.INSTANCE_ID : `${Date.now()}-hexaltsDeafult-${Date.now() * Math.random()}`
 const RDB = new RDBC(
   {
     host: brokerHost,
     username: process.env.BROKER_USERNAME,
     password: process.env.BROKER_PASSWORD,
   },
-  process.env.INSTANCE_ID
+  instanceId
 );
 const instance = RDB.Database(database).Collection(collection);
 describe('Realtime Database instance test scenario', () => {
