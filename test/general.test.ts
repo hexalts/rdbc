@@ -3,7 +3,13 @@ import RDBC from '../src';
 const database = 'tester';
 const collection = 'test';
 const brokerHost = `${process.env.BROKER_PROTOCOL}://${process.env.BROKER_HOSTNAME}:${process.env.BROKER_PORT}`;
-const instanceId = process.env.INSTANCE_ID ? process.env.INSTANCE_ID : `${Date.now()}-hexaltsDeafult-${Date.now() * Math.random()}`
+const instanceId =
+  typeof process.env.INSTANCE_ID !== 'undefined'
+    ? process.env.INSTANCE_ID
+    : `${Date.now()}-hexaltsDeafult-${Date.now() * Math.random()}`;
+
+console.log('Environment instance id', process.env.INSTANCE_ID);
+console.log('Actual used instance id', instanceId);
 const RDB = new RDBC(
   {
     host: brokerHost,

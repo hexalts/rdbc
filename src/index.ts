@@ -147,7 +147,7 @@ const payloadProcessor = async (
         break;
       case 'update':
         if (queries.length === 0) {
-          console.warn(
+          console.error(
             'Where condition must be set in order to use Update function'
           );
         } else {
@@ -156,7 +156,7 @@ const payloadProcessor = async (
         break;
       case 'delete':
         if (queries.length === 0) {
-          console.warn(
+          console.error(
             'Where condition must be set in order to use Delete function'
           );
         } else {
