@@ -2,7 +2,7 @@ name: CI
 on: [push]
 jobs:
   build:
-    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+    name: End-to-end test using Hexalts Server on Node ${{ matrix.node }} and ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -22,7 +22,7 @@ jobs:
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
-      - name: Test
+      - name: Test using Hexalts Server
         env:
           BROKER_HOSTNAME: ${{ secrets.BROKER_HOSTNAME }}
           BROKER_PROTOCOL: ${{ secrets.BROKER_PROTOCOL  }}
@@ -31,6 +31,3 @@ jobs:
           BROKER_PORT: ${{ secrets.BROKER_PORT  }}
           INSTANCE_ID: ${{ secrets.INSTANCE_ID  }}
         run: yarn test --ci --maxWorkers=2
-
-      - name: Build
-        run: yarn build
