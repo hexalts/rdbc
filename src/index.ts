@@ -331,39 +331,39 @@ export class Collection {
             let shouldPass = true;
             this.queries.forEach(query => {
               if (
-                !Array.isArray(content.data.payload) &&
-                typeof content.data.payload === 'object' &&
-                typeof content.data.payload[query.field] !== 'undefined' &&
+                Array.isArray(content.data.payload) &&
+                typeof content.data.payload[0] === 'object' &&
+                typeof content.data.payload[0][query.field] !== 'undefined' &&
                 shouldPass
               ) {
                 switch (query.operator) {
                   case '!=':
-                    if (!(content.data.payload[query.field] !== query.value)) {
+                    if (!(content.data.payload[0][query.field] !== query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '<':
-                    if (!(content.data.payload[query.field] < query.value)) {
+                    if (!(content.data.payload[0][query.field] < query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '<=':
-                    if (!(content.data.payload[query.field] <= query.value)) {
+                    if (!(content.data.payload[0][query.field] <= query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '==':
-                    if (!(content.data.payload[query.field] === query.value)) {
+                    if (!(content.data.payload[0][query.field] === query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '>':
-                    if (!(content.data.payload[query.field] > query.value)) {
+                    if (!(content.data.payload[0][query.field] > query.value)) {
                       shouldPass = false;
                     }
                     break;
                   case '>=':
-                    if (!(content.data.payload[query.field] >= query.value)) {
+                    if (!(content.data.payload[0][query.field] >= query.value)) {
                       shouldPass = false;
                     }
                     break;
