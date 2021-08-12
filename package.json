@@ -32,16 +32,6 @@
   "name": "@hexalts/rdbc",
   "author": "azharizkita",
   "module": "dist/rdb.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/rdbc.esm.js",
-      "limit": "40 KB"
-    },
-    {
-      "path": "dist/rdbc.cjs.production.min.js",
-      "limit": "15 KB"
-    }
-  ],
   "devDependencies": {
     "husky": "^7.0.1",
     "tsdx": "^0.14.1",
