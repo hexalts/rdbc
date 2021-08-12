@@ -338,7 +338,9 @@ export class Collection {
               ) {
                 switch (query.operator) {
                   case '!=':
-                    if (!(content.data.payload[0][query.field] !== query.value)) {
+                    if (
+                      !(content.data.payload[0][query.field] !== query.value)
+                    ) {
                       shouldPass = false;
                     }
                     break;
@@ -348,12 +350,16 @@ export class Collection {
                     }
                     break;
                   case '<=':
-                    if (!(content.data.payload[0][query.field] <= query.value)) {
+                    if (
+                      !(content.data.payload[0][query.field] <= query.value)
+                    ) {
                       shouldPass = false;
                     }
                     break;
                   case '==':
-                    if (!(content.data.payload[0][query.field] === query.value)) {
+                    if (
+                      !(content.data.payload[0][query.field] === query.value)
+                    ) {
                       shouldPass = false;
                     }
                     break;
@@ -363,7 +369,9 @@ export class Collection {
                     }
                     break;
                   case '>=':
-                    if (!(content.data.payload[0][query.field] >= query.value)) {
+                    if (
+                      !(content.data.payload[0][query.field] >= query.value)
+                    ) {
                       shouldPass = false;
                     }
                     break;
