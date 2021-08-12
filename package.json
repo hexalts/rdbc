@@ -1,42 +1,28 @@
 {
   "version": "0.2.3",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "name": "@hexalts/rdbc",
+  "author": "azharizkita",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "typings": "dist/cjs/index.d.ts",
   "files": [
     "dist"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "yarn lint && tsdx build --writeMeta false && rm dist/*.map",
-    "doc": "yarn typedoc src/index.ts",
-    "test": "tsdx test",
-    "lint": "tsdx lint --fix",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
+    "test": "jest test",
     "prepare": "yarn build"
   },
   "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint --fix"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "@hexalts/rdbc",
-  "author": "azharizkita",
-  "module": "dist/rdb.esm.js",
   "devDependencies": {
-    "husky": "^7.0.1",
-    "tsdx": "^0.14.1",
+    "@types/jest": "^27.0.1",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.4",
     "tslib": "^2.3.1",
-    "typedoc": "^0.21.5",
     "typescript": "^4.3.5"
   },
   "dependencies": {
