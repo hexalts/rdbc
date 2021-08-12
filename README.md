@@ -1,4 +1,6 @@
-![CI Workflow](https://github.com/hexalts/rdbc/actions/workflows/main.yml/badge.svg)
+[![OSSAR](https://github.com/hexalts/rdbc/actions/workflows/ossar.yml/badge.svg)](https://github.com/hexalts/rdbc/actions/workflows/ossar.yml)
+[![CodeQL](https://github.com/hexalts/rdbc/actions/workflows/codeql.yml/badge.svg)](https://github.com/hexalts/rdbc/actions/workflows/codeql.yml)
+[![CI](https://github.com/hexalts/rdbc/actions/workflows/main.yml/badge.svg)](https://github.com/hexalts/rdbc/actions/workflows/main.yml)
 
 > Make sure you have set up the RDB Server side. Please refer to [this](https://github.com/hexalts/rdb) link.
 
