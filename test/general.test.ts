@@ -1,4 +1,4 @@
-import RDBC from '../dist/esm';
+import RDBC from '../dist/cjs';
 
 const database = 'tester';
 const collection = 'test';
