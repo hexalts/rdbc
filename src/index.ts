@@ -315,7 +315,7 @@ export class Collection {
     const clientConnection = createMQTTInstance(this.broker);
     if (method === 'all') {
       this.Get().then(result =>
-        result.forEach(document => stream.emit('data', document))
+        stream.emit('data', result)
       );
     }
     clientConnection.once('connect', () => {
