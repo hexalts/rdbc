@@ -93,10 +93,10 @@ export interface RespondType {
 
 declare interface Stream {
   on(event: "data", listener: (payload: any) => void): this;
-  on(event: "delete", listener: (payload: { _id: string }) => void): this;
+  on(event: "delete", listener: (payload: { _id: string }[]) => void): this;
   once(event: "off", listener: () => void): this;
   once(event: "data", listener: (payload: any) => void): this;
-  once(event: "delete", listener: (payload: { _id: string }) => void): this;
+  once(event: "delete", listener: (payload: { _id: string }[]) => void): this;
 }
 
 class Stream extends EventEmitter {
