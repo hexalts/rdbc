@@ -1,5 +1,5 @@
-import * as MQTT from 'mqtt';
-import { EventEmitter } from 'events';
+import * as MQTT from "mqtt";
+import { EventEmitter } from "events";
 
 /**
  * MQTT Broker Host Configuration
@@ -35,7 +35,7 @@ export interface Query {
   /**
    * Query selector.
    */
-  operator: '==' | '<=' | '>=' | '<' | '>' | '!=';
+  operator: "==" | "<=" | ">=" | "<" | ">" | "!=";
   /**
    * Value to compare.
    */
@@ -68,11 +68,11 @@ export interface Payload {
   /**
    * Payload type.
    */
-  type: 'start' | 'reply' | 'end' | 'changeStream' | 'error';
+  type: "start" | "reply" | "end" | "changeStream" | "error";
   /**
    * Operation type.
    */
-  operation: 'create' | 'get' | 'update' | 'replace' | 'delete';
+  operation: "create" | "get" | "update" | "replace" | "delete";
   /**
    * Query list.
    */
@@ -92,16 +92,16 @@ export interface RespondType {
 }
 
 declare interface Stream {
-  on(event: 'data', listener: (payload: any) => void): this;
-  on(event: 'delete', listener: (payload: string) => void): this;
-  once(event: 'off', listener: () => void): this;
-  once(event: 'data', listener: (payload: any) => void): this;
-  once(event: 'delete', listener: (payload: string) => void): this;
+  on(event: "data", listener: (payload: any) => void): this;
+  on(event: "delete", listener: (payload: { _id: string }) => void): this;
+  once(event: "off", listener: () => void): this;
+  once(event: "data", listener: (payload: any) => void): this;
+  once(event: "delete", listener: (payload: { _id: string }) => void): this;
 }
 
 class Stream extends EventEmitter {
   end() {
-    this.emit('off', true);
+    this.emit("off", true);
   }
 }
 
@@ -111,7 +111,7 @@ class Stream extends EventEmitter {
  */
 export const createMQTTInstance = (
   config: BrokerConfiguration = {
-    host: '',
+    host: "",
     password: undefined,
     username: undefined,
   }
@@ -126,7 +126,7 @@ const payloadProcessor = async (
   instanceId: string,
   broker: BrokerConfiguration,
   queries: Query[],
-  action: 'create' | 'get' | 'update' | 'delete',
+  action: "create" | "get" | "update" | "delete",
   database: string,
   collection: string,
   payload: object
@@ -134,30 +134,30 @@ const payloadProcessor = async (
   return new Promise<{ [field: string]: any }[]>((resolve, reject) => {
     let shouldPass = false;
     switch (action) {
-      case 'create':
+      case "create":
         if (queries.length !== 0) {
           console.warn(
-            'Where condition were set and will always be ignored in Create function'
+            "Where condition were set and will always be ignored in Create function"
           );
         }
         shouldPass = true;
         break;
-      case 'get':
+      case "get":
         shouldPass = true;
         break;
-      case 'update':
+      case "update":
         if (queries.length === 0) {
           console.error(
-            'Where condition must be set in order to use Update function'
+            "Where condition must be set in order to use Update function"
           );
         } else {
           shouldPass = true;
         }
         break;
-      case 'delete':
+      case "delete":
         if (queries.length === 0) {
           console.error(
-            'Where condition must be set in order to use Delete function'
+            "Where condition must be set in order to use Delete function"
           );
         } else {
           shouldPass = true;
@@ -173,23 +173,23 @@ const payloadProcessor = async (
         subscribe: `${instanceId}/payload/${database}/${collection}/${id}`,
       };
       const requestPayload: Payload = {
-        type: 'start',
+        type: "start",
         operation: action,
         query: queries,
         payload: payload,
       };
       const clientConnection = createMQTTInstance(broker);
-      clientConnection.once('connect', () => {
+      clientConnection.once("connect", () => {
         const dataContainer: { [field: string]: any }[] = [];
         clientConnection.subscribe(topics.subscribe);
-        clientConnection.on('message', (_topic, payload) => {
+        clientConnection.on("message", (_topic, payload) => {
           const response: RespondType = JSON.parse(payload.toString());
-          if (response.data.type === 'end') {
+          if (response.data.type === "end") {
             resolve(dataContainer);
             clientConnection.end();
-          } else if (response.data.type === 'error') {
+          } else if (response.data.type === "error") {
             reject(response);
-          } else if (response.data.type === 'reply') {
+          } else if (response.data.type === "reply") {
             dataContainer.push(...response.data.payload);
           }
         });
@@ -199,7 +199,7 @@ const payloadProcessor = async (
         );
       });
     } else {
-      reject('Cannot proceed. Please recheck your query.');
+      reject("Cannot proceed. Please recheck your query.");
     }
   });
 };
@@ -213,7 +213,7 @@ export default class RDB {
    */
   constructor(
     private broker: BrokerConfiguration = {
-      host: 'mqtt://broker.hivemq.com:1883',
+      host: "mqtt://broker.hivemq.com:1883",
     },
     private instanceId: string
   ) {}
@@ -290,11 +290,11 @@ export class Collection {
    */
   Where(
     field: string,
-    operator: '==' | '<=' | '>=' | '<' | '>' | '!=',
+    operator: "==" | "<=" | ">=" | "<" | ">" | "!=",
     value: any
   ) {
     if (!this.idSets) {
-      if (field === '_id') {
+      if (field === "_id") {
         this.idSets = true;
         this.queries = [{ field, operator, value }];
       } else {
@@ -310,65 +310,63 @@ export class Collection {
    *
    * @param method
    */
-  Stream(method: 'change' | 'all' = 'change') {
+  Stream(method: "change" | "all" = "change") {
     const stream = new Stream();
     const clientConnection = createMQTTInstance(this.broker);
-    if (method === 'all') {
-      this.Get().then(result =>
-        stream.emit('data', result)
-      );
+    if (method === "all") {
+      this.Get().then((result) => stream.emit("data", result));
     }
-    clientConnection.once('connect', () => {
+    clientConnection.once("connect", () => {
       clientConnection.subscribe(
         `${this.instanceId}/stream/${this.database}/${this.collection}/#`
       );
-      clientConnection.on('message', (_topic, payload) => {
+      clientConnection.on("message", (_topic, payload) => {
         const content: RespondType = JSON.parse(payload.toString());
-        if (content.data.operation === 'delete') {
-          stream.emit('delete', content.data.payload);
+        if (content.data.operation === "delete") {
+          stream.emit("delete", content.data.payload);
         } else {
           if (this.queries.length !== 0) {
             let shouldPass = true;
-            this.queries.forEach(query => {
+            this.queries.forEach((query) => {
               if (
                 Array.isArray(content.data.payload) &&
-                typeof content.data.payload[0] === 'object' &&
-                typeof content.data.payload[0][query.field] !== 'undefined' &&
+                typeof content.data.payload[0] === "object" &&
+                typeof content.data.payload[0][query.field] !== "undefined" &&
                 shouldPass
               ) {
                 switch (query.operator) {
-                  case '!=':
+                  case "!=":
                     if (
                       !(content.data.payload[0][query.field] !== query.value)
                     ) {
                       shouldPass = false;
                     }
                     break;
-                  case '<':
+                  case "<":
                     if (!(content.data.payload[0][query.field] < query.value)) {
                       shouldPass = false;
                     }
                     break;
-                  case '<=':
+                  case "<=":
                     if (
                       !(content.data.payload[0][query.field] <= query.value)
                     ) {
                       shouldPass = false;
                     }
                     break;
-                  case '==':
+                  case "==":
                     if (
                       !(content.data.payload[0][query.field] === query.value)
                     ) {
                       shouldPass = false;
                     }
                     break;
-                  case '>':
+                  case ">":
                     if (!(content.data.payload[0][query.field] > query.value)) {
                       shouldPass = false;
                     }
                     break;
-                  case '>=':
+                  case ">=":
                     if (
                       !(content.data.payload[0][query.field] >= query.value)
                     ) {
@@ -384,15 +382,15 @@ export class Collection {
               }
             });
             if (shouldPass) {
-              stream.emit('data', content.data.payload);
+              stream.emit("data", content.data.payload);
             }
           } else {
-            stream.emit('data', content.data.payload);
+            stream.emit("data", content.data.payload);
           }
         }
       });
     });
-    stream.once('off', () => {
+    stream.once("off", () => {
       clientConnection.end(true);
     });
     return stream;
@@ -407,7 +405,7 @@ export class Collection {
       this.instanceId,
       this.broker,
       this.queries,
-      'create',
+      "create",
       this.database,
       this.collection,
       payload
@@ -421,7 +419,7 @@ export class Collection {
       this.instanceId,
       this.broker,
       this.queries,
-      'get',
+      "get",
       this.database,
       this.collection,
       {}
@@ -437,7 +435,7 @@ export class Collection {
       this.instanceId,
       this.broker,
       this.queries,
-      'update',
+      "update",
       this.database,
       this.collection,
       payload
@@ -451,7 +449,7 @@ export class Collection {
       this.instanceId,
       this.broker,
       this.queries,
-      'delete',
+      "delete",
       this.database,
       this.collection,
       {}
