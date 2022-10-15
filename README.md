@@ -1,206 +1,103 @@
-[![OSSAR](https://github.com/hexalts/rdbc/actions/workflows/ossar.yml/badge.svg)](https://github.com/hexalts/rdbc/actions/workflows/ossar.yml)
-[![CodeQL](https://github.com/hexalts/rdbc/actions/workflows/codeql.yml/badge.svg)](https://github.com/hexalts/rdbc/actions/workflows/codeql.yml)
-[![CI](https://github.com/hexalts/rdbc/actions/workflows/main.yml/badge.svg)](https://github.com/hexalts/rdbc/actions/workflows/main.yml)
+# TSDX User Guide
 
-> Make sure you have set up the RDB Server side. Please refer to [this](https://github.com/hexalts/rdb) link.
+Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
 
-## Instalation
+> This TSDX setup is meant for developing libraries (not apps!) that can be published to NPM. If you’re looking to build a Node app, you could use `ts-node-dev`, plain `ts-node`, or simple `tsc`.
 
-```shell
-yarn add @hexalts/rdbc
+> If you’re new to TypeScript, checkout [this handy cheatsheet](https://devhints.io/typescript)
+
+## Commands
+
+TSDX scaffolds your new library inside `/src`.
+
+To run TSDX, use:
+
+```bash
+npm start # or yarn start
 ```
 
-## Example
+This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
 
----
+To do a one-off build, use `npm run build` or `yarn build`.
 
-### Once
+To run tests, use `npm test` or `yarn test`.
 
-Let's say you already have a MongoDB with collection `cats` with multiple documents of `cat`. You want to get it all for once.
+## Configuration
 
-First, you need to set up the RDB Configuration.
+Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
 
-```javascript
-import RDB from '@hexalts/rdbc';
+### Jest
 
-const instanceId = 'random UUIDv4'
-const RDB = new RDB(
-  {
-    host: 'wss://broker.address.com:8883',
-  },
-  instanceId
-);
+Jest tests are set up to run with `npm test` or `yarn test`.
 
+### Bundle Analysis
+
+[`size-limit`](https://github.com/ai/size-limit) is set up to calculate the real cost of your library with `npm run size` and visualize the bundle with `npm run analyze`.
+
+#### Setup Files
+
+This is the folder structure we set up for you:
+
+```txt
+/src
+  index.tsx       # EDIT THIS
+/test
+  blah.test.tsx   # EDIT THIS
+.gitignore
+package.json
+README.md         # EDIT THIS
+tsconfig.json
 ```
 
-> You can try to generate an UUID v4 on [this page](https://www.uuidgenerator.net/version4), and make sure the client instanceId matches with the server instanceId. Otherwise it won't work.
+### Rollup
 
-Next step is to set up the database target and the collection we want to use.
+TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
 
-```javascript
-const instance = RDB.Database('hexalts');
-instance.Collection('cats');
-```
+### TypeScript
 
-Note that you only need to do this setup for once. It is dead simple. Then you can get all those `cat` like this.
+`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
 
-```javascript
-const getAllCats = async () => {
-  const result = await instance.Get();
-  console.log(result);
-};
+## Continuous Integration
 
-getAllCats();
-```
+### GitHub Actions
 
-### Stream
+Two actions are added by default:
 
-What if you want to listen to changes that affected any documents inside `cats` collection, while you get all documents inside `cats` collection at once? No worries, because it is as easy as this.
+- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
+- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
 
-```javascript
-const watchThoseCats = async () => {
-  const stream = instance.Stream('all');
-  stream.on('data', (data) => {
-    console.log(data);
-  })
-};
+## Optimizations
 
-watchThoseCats();
-```
+Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
 
-### Query
+```js
+// ./types/index.d.ts
+declare var __DEV__: boolean;
 
-What if you want to get documents with multiple rules? Let's assume you have such documents
-
-```
-[
-  {
-    _id: '1',
-    name: 'ciyo,
-    age: 2,
-    race: 'persian medium',
-  },
-  {
-    _id: '2',
-    name: 'izzy',
-    age: 1,
-    race: 'persian medium'
-  },
-  {
-    _id: '3',
-    name: 'mio,
-    age: 3,
-    race: 'persian medium'
-  },
-  {
-    _id: '4',
-    name: 'qio,
-    age: 4,
-    race: 'himalayan'
-  },
-]
-
-```
-
-Let's say you want to get any `persian medium` cats with age greater than `1`. It goes like this.
-
-```javascript
-const whereAreThoseCats = async () => {
-  instance.Where('race', '==', 'persian medium')
-  instance.Where('age', '>', 1)
-  const stream = instance.Stream('all');
-  stream.on('data', (data) => {
-    console.log(data);
-  });
-};
-
-whereAreThoseCats();
-```
-
-It will return
-
-```
-{
-  _id: '1',
-  name: 'ciyo,
-  age: 2,
-  race: 'persian medium',
+// inside your code...
+if (__DEV__) {
+  console.log('foo');
 }
-{
-  _id: '3',
-  name: 'mio,
-  age: 3,
-  race: 'persian medium'
-},
 ```
 
-First, it will fetch you all documents which meets your rules. And then, once a document (which meets the rules) got changed, an event will be emitted over the `stream.on` with event name `data`, the data it emits is the one which got changed, it will not return the whole documents (which meets the rules) again because that will be inefficient.
+You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
 
-### Clear
+## Module Formats
 
-A note to remember:
+CJS, ESModules, and UMD module formats are supported.
 
->The Where() method actually push any query into the instance state, it means you need to Clear the Where condition to default every time you need a different query pattern.
+The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
 
-But don't worry, because it is as easy as this.
+## Named Exports
 
-```javascript
-instance.Clear();
-```
+Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
 
-### Update
+## Including Styles
 
-Let's say you inputted `ciyo` accidentally (it should be `cio`) and you want to update the document. Well, you got two ways to do that.
+There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
 
-1. If you know the document id.
+For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
 
-```javascript
-const changeCatName = async () => {
-  instance.Where('_id', '==', '1')
-  const result = await instance.Update({ name: 'cio' });
-  console.log(result);
-};
+## Publishing to NPM
 
-changeCatName();
-```
-2. If you don't remember the document id.
-
-```javascript
-const changeCatName = async () => {
-  instance.Where('name', '==', 'ciyo')
-  const result = await instance.Update({ name: 'cio' });
-  console.log(result);
-};
-
-changeCatName();
-```
-### Delete
-Let's say `cio` has just passed away and you want to move on, completely. Just like the Update method, you can use Where condition to delete it
-
-
-1. If you know the document id.
-
-```javascript
-const changeCatName = async () => {
-  instance.Where('_id', '==', '1')
-  const result = await instance.Delete();
-  console.log(result);
-};
-
-changeCatName();
-```
-2. If you don't remember the document id.
-
-```javascript
-const changeCatName = async () => {
-  instance.Where('name', '==', 'ciyo')
-  const result = await instance.Delete();
-  console.log(result);
-};
-
-changeCatName();
-```
-
-## Full API Documentation
-
-For deeper understanding of Hexatls Realtime Database APIs, please refer to [this dcumentation](https://hexalts.github.io/rdbc/classes/default.html).
+We recommend using [np](https://github.com/sindresorhus/np).

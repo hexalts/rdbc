@@ -1,80 +1,53 @@
-import RDBC from '../dist/cjs';
+import RDB from '../src';
 
-const database = 'tester';
-const collection = 'test';
-const brokerHost = `${process.env.BROKER_PROTOCOL}://${process.env.BROKER_HOSTNAME}:${process.env.BROKER_PORT}`;
-const instanceId =
-  typeof process.env.INSTANCE_ID !== 'undefined'
-    ? process.env.INSTANCE_ID
-    : `${Date.now()}-hexaltsDeafult-${Date.now() * Math.random()}`;
-
-console.log('Environment instance id', process.env.INSTANCE_ID);
-console.log('Actual used instance id', instanceId);
-const RDB = new RDBC(
-  {
-    host: brokerHost,
-    username: process.env.BROKER_USERNAME,
-    password: process.env.BROKER_PASSWORD,
+const instanceId = String(Date.now());
+const instance = new RDB(instanceId, {
+  communicator: {
+    host: 'ws://localhost:1883',
   },
-  instanceId
-);
-const instance = RDB.Database(database).Collection(collection);
-describe('Realtime Database instance test scenario', () => {
-  it('Database target sets correctly', () => {
-    expect(instance.Status().database).toEqual(database);
-  });
-  it('Collection target sets correctly', () => {
-    expect(instance.Status().collection).toEqual(collection);
-  });
-  const client = RDB.CreateMQTTInstance();
-  it('Connect to broker host', async () => {
-    const result = new Promise<boolean>((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        resolve(false);
-      }, 5000);
-      client
-        .once('connect', () => {
-          clearTimeout(timeout);
-          client.end();
-          resolve(true);
-        })
-        .once('error', () => {
-          clearTimeout(timeout);
-          client.end();
-          reject(false);
-        });
-    });
-    expect(await result).toEqual(true);
-  });
+  host: 'http://localhost:3001',
 });
 
-describe('Collection functions test scenario', () => {
-  let referenceId = '';
-  it('Create', async () => {
-    const response = await instance.Create({
-      type: 'tester',
-      test: 'from jest',
-    });
-    referenceId = response[0].insertedId;
-    instance.Where('_id', '==', referenceId);
-    expect(response[0].acknowledged).toEqual(true);
+const payload = {
+  content: 'all good?',
+};
+
+describe('General functionalities', () => {
+  let _insertedId: string;
+  it('Create new data', async () => {
+    const result = await instance
+      .database('test')
+      .collection('test')
+      .create(payload);
+    const { insertedId } = result;
+    _insertedId = insertedId;
+    expect(result).toBeTruthy();
   });
-  it('Get', async () => {
-    const response = await instance.Get();
-    expect(response.length === 1).toEqual(true);
+
+  it('Get data by id', async () => {
+    const result = await instance
+      .database('test')
+      .collection('test')
+      .where('_id', '==', _insertedId)
+      .get();
+    expect(result.length).toEqual(1);
   });
-  it('Update', async () => {
-    const response = await instance.Update({ test: 'should be true' });
-    expect(
-      response[0].acknowledged &&
-        response[0].modifiedCount === 1 &&
-        response[0].matchedCount === 1
-    ).toEqual(true);
+
+  it('Update data by id', async () => {
+    const result = await instance
+      .database('test')
+      .collection('test')
+      .where('_id', '==', _insertedId)
+      .update({ content: 'ye all good' });
+    expect(result.modifiedCount).toEqual(1);
   });
-  it('Delete', async () => {
-    const response = await instance.Delete();
-    expect(response[0].acknowledged && response[0].deletedCount === 1).toEqual(
-      true
-    );
+
+  it('Delete data by id', async () => {
+    const result = await instance
+      .database('test')
+      .collection('test')
+      .where('_id', '==', _insertedId)
+      .delete();
+    expect(result.deletedCount).toEqual(1);
   });
 });
