@@ -1,4 +1,4 @@
-import RDB from '../src';
+import RDB from '../dist';
 
 const instanceId = String(Date.now());
 const instance = new RDB(instanceId, {
