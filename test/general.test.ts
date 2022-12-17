@@ -15,39 +15,42 @@ const payload = {
 describe('General functionalities', () => {
   let _insertedId: string;
   it('Create new data', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
-      .collection('test')
-      .create(payload);
-    const { insertedId } = result;
+      .collection('test');
+
+    const data = await query.create(payload);
+    const { insertedId } = data;
     _insertedId = insertedId;
-    expect(result).toBeTruthy();
+    expect(insertedId).toBeTruthy();
   });
 
   it('Get data by id', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .where('_id', '==', _insertedId)
-      .get();
-    expect(result.length).toEqual(1);
+      .where('_id', '==', _insertedId);
+
+    const data = await query.get();
+    expect(data.length).toBe(1);
   });
 
   it('Update data by id', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .where('_id', '==', _insertedId)
-      .update({ content: 'ye all good' });
-    expect(result.modifiedCount).toEqual(1);
+      .where('_id', '==', _insertedId);
+    const data = await query.update({ content: 'ye all good' });
+    expect(data.modifiedCount).toBe(1);
   });
 
   it('Delete data by id', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .where('_id', '==', _insertedId)
-      .delete();
-    expect(result.deletedCount).toEqual(1);
+      .where('_id', '==', _insertedId);
+
+    const data = await query.delete();
+    expect(data.deletedCount).toBe(1);
   });
 });

@@ -29,37 +29,41 @@ const payload = [
 
 describe('Advanced functionalities', () => {
   it('Create new multiple data', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .create(payload);
-    expect(result).toBeTruthy();
+
+    const result = await query.create(payload);
+    expect(result.insertedCount).toBe(payload.length);
   });
 
   it('Get data by condition', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .where('group', '==', 'advanced test for u')
-      .get();
-    expect(result.length).toEqual(2);
+      .where('group', '==', 'advanced test for u');
+
+    const result = await query.get();
+    expect(result.length).toBe(2);
   });
 
   it('Update data by condition', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .where('group', '==', 'advanced test for u')
-      .update({ content: 'ye I good' });
-    expect(result.modifiedCount).toEqual(2);
+      .where('group', '==', 'advanced test for u');
+
+    const result = await query.update({ content: 'ye I good' });
+    expect(result.modifiedCount).toBe(2);
   });
 
   it('Delete data by condition', async () => {
-    const result = await instance
+    const query = instance
       .database('test')
       .collection('test')
-      .where('group', '==', 'advanced test for u')
-      .delete();
-    expect(result.deletedCount).toEqual(2);
+      .where('group', '==', 'advanced test for u');
+
+    const result = await query.delete();
+    expect(result.deletedCount).toBe(2);
   });
 });
